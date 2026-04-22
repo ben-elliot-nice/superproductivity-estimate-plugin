@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
-    "@super-productivity/plugin-api": "latest",
+    "@super-productivity/plugin-api": "1.0.1",
     "@testing-library/dom": "^10.0.0",
     "@types/node": "^22.0.0",
     "jsdom": "^27.0.0",
