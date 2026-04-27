@@ -1,48 +1,48 @@
 import type { PluginAPI } from '@super-productivity/plugin-api';
 
-declare const plugin: PluginAPI;
+declare const PluginAPI: PluginAPI;
 
-plugin.registerHeaderButton({
+PluginAPI.registerHeaderButton({
   icon: 'schedule',
   label: 'Estimates & Schedule',
-  onClick: () => plugin.showIndexHtmlAsView(),
+  onClick: () => PluginAPI.showIndexHtmlAsView(),
 });
 
-plugin.registerShortcut({
+PluginAPI.registerShortcut({
   id: 'open-estimate-plugin',
   label: 'Open Estimates & Scheduler',
-  onExec: () => plugin.showIndexHtmlAsView(),
+  onExec: () => PluginAPI.showIndexHtmlAsView(),
 });
 
 // Notify iframe when any task changes so it can re-fetch
-plugin.registerHook('anyTaskUpdate' as Parameters<typeof plugin.registerHook>[0], () => {
+PluginAPI.registerHook('anyTaskUpdate' as Parameters<typeof PluginAPI.registerHook>[0], () => {
   const iframe = document.querySelector(
     'iframe[data-plugin-iframe]',
   ) as HTMLIFrameElement | null;
   iframe?.contentWindow?.postMessage({ type: 'tasksUpdated' }, '*');
 });
 
-plugin.registerMenuEntry({
+PluginAPI.registerMenuEntry({
       label: 'Estimates and Scheduler',
       icon: 'dashboard',
       onClick: () => {
-        plugin.showIndexHtmlAsView();
+        PluginAPI.showIndexHtmlAsView();
       }
     });
 
-if ((plugin as any).onMessage) {
-  (plugin as any).onMessage(async (message: unknown) => {
+if ((PluginAPI as any).onMessage) {
+  (PluginAPI as any).onMessage(async (message: unknown) => {
     const msg = message as { type: string; payload?: any };
     switch (msg?.type) {
       case 'getTasks':
-        return await plugin.getTasks();
+        return await PluginAPI.getTasks();
       case 'getAllProjects':
-        return await plugin.getAllProjects();
+        return await PluginAPI.getAllProjects();
       case 'updateTask':
-        await plugin.updateTask(msg.payload.id, msg.payload.updates);
+        await PluginAPI.updateTask(msg.payload.id, msg.payload.updates);
         return { success: true };
       case 'showSnack':
-        (plugin as any).showSnack(msg.payload);
+        (PluginAPI as any).showSnack(msg.payload);
         return { success: true };
       default:
         return { error: `Unknown message type: ${msg?.type}` };
