@@ -10,6 +10,7 @@ interface FlatRow {
 
 interface Props {
   projectTitle: string;
+  projectColor?: string;
   tasks: Task[]; // top-level tasks only
   taskMap: Map<string, Task>;
   showDone: boolean;
@@ -37,7 +38,11 @@ export const ProjectGroup: Component<Props> = (props) => {
 
   return (
     <div class="project-group">
-      <div class="project-header" onClick={() => setCollapsed((c) => !c)}>
+      <div
+        class="project-header"
+        style={props.projectColor ? { '--project-color': props.projectColor } : undefined}
+        onClick={() => setCollapsed((c) => !c)}
+      >
         <span class="project-collapse-icon">{collapsed() ? '▶' : '▼'}</span>
         <span class="project-title">{props.projectTitle}</span>
         <span class="project-task-count">({props.tasks.length})</span>

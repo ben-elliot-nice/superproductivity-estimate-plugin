@@ -6,4 +6,5 @@ export interface Task extends BaseTask {
   dueWithTime?: number | null;
   dueDay?: string | null;
   remindAt?: number | null;
+  created?: number; // ms timestamp — used for estimate staleness detection
 }

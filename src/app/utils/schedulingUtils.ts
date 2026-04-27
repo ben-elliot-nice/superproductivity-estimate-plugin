@@ -1,3 +1,5 @@
+import type { Task } from '../types'; // used in distributeSubtaskTimes / hasScheduledSubtasks
+
 export interface DayChip {
   label: string;
   date: Date; // midnight local time on that day
@@ -39,4 +41,28 @@ export function sameDay(a: Date, b: Date): boolean {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   );
+}
+
+/**
+ * Distribute sequential start times to subtasks starting from a given timestamp.
+ * Subtasks with no estimate are skipped (not scheduled).
+ */
+export function distributeSubtaskTimes(
+  subtasks: Task[],
+  startTimestamp: number,
+): { id: string; dueWithTime: number }[] {
+  const results: { id: string; dueWithTime: number }[] = [];
+  let cursor = startTimestamp;
+  for (const sub of subtasks) {
+    const estimate = sub.timeEstimate ?? 0;
+    if (estimate > 0) {
+      results.push({ id: sub.id, dueWithTime: cursor });
+      cursor += estimate;
+    }
+  }
+  return results;
+}
+
+export function hasScheduledSubtasks(subtasks: Task[]): boolean {
+  return subtasks.some((t) => !!t.dueWithTime);
 }

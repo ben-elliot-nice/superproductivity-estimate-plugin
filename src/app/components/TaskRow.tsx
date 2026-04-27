@@ -5,6 +5,8 @@ import { StartTimePicker } from './StartTimePicker';
 import { formatTime } from '../utils/formatTime';
 import { formatScheduledDate } from '../utils/schedulingUtils';
 
+const STALE_THRESHOLD_MS = 14 * 24 * 60 * 60 * 1000;
+
 interface Props {
   task: Task;
   isSubtask: boolean;
@@ -17,11 +19,38 @@ interface Props {
 }
 
 export const TaskRow: Component<Props> = (props) => {
+  const isScheduled = () => !!props.task.dueWithTime;
+
+  const isStale = () =>
+    (props.task.timeEstimate ?? 0) > 0 &&
+    !!props.task.created &&
+    Date.now() - props.task.created > STALE_THRESHOLD_MS;
+
   return (
-    <div class="task-row">
+    <div
+      class="task-row"
+      classList={{ 'task-row--scheduled': isScheduled() }}
+    >
       <div class={`task-row-main${props.isSubtask ? ' is-subtask' : ''}`}>
-        <div class="task-title" onClick={props.onToggleExpand}>
-          <div class="task-title-text">{props.task.title}</div>
+        <div
+          class="task-title"
+          tabIndex={0}
+          role="button"
+          aria-expanded={props.isExpanded}
+          onClick={props.onToggleExpand}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              props.onToggleExpand();
+            }
+          }}
+        >
+          <div class="task-title-text">
+            {props.task.title}
+            <Show when={isStale()}>
+              <span class="stale-dot" title="Estimate may be outdated (task created >2 weeks ago)" />
+            </Show>
+          </div>
           <Show when={props.isSubtask && props.parentTitle}>
             <div class="task-parent-label">↳ {props.parentTitle}</div>
           </Show>
@@ -29,7 +58,7 @@ export const TaskRow: Component<Props> = (props) => {
         <div class="task-meta" onClick={props.onToggleExpand}>
           <Show when={props.task.dueWithTime}>
             <span class="scheduled-badge">
-              {formatScheduledDate(props.task.dueWithTime!)}
+              ⏱ {formatScheduledDate(props.task.dueWithTime!)}
             </span>
           </Show>
           <span class="time-logged">{formatTime(props.task.timeSpent)}</span>

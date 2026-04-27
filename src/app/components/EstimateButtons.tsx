@@ -12,19 +12,15 @@ interface Increment {
 }
 
 const DECREMENTS: Increment[] = [
-  { label: '−5h', ms: -5 * 60 * 60_000 },
   { label: '−1h', ms: -60 * 60_000 },
   { label: '−30m', ms: -30 * 60_000 },
   { label: '−15m', ms: -15 * 60_000 },
-  { label: '−5m', ms: -5 * 60_000 },
 ];
 
 const INCREMENTS: Increment[] = [
-  { label: '+5m', ms: 5 * 60_000 },
   { label: '+15m', ms: 15 * 60_000 },
   { label: '+30m', ms: 30 * 60_000 },
   { label: '+1h', ms: 60 * 60_000 },
-  { label: '+5h', ms: 5 * 60 * 60_000 },
 ];
 
 export const EstimateButtons: Component<Props> = (props) => {
@@ -32,6 +28,16 @@ export const EstimateButtons: Component<Props> = (props) => {
     e.stopPropagation();
     const next = Math.max(0, props.estimate + deltaMs);
     props.onUpdate(next);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      props.onUpdate(props.estimate + 15 * 60_000);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      props.onUpdate(Math.max(0, props.estimate - 15 * 60_000));
+    }
   };
 
   return (
@@ -47,7 +53,15 @@ export const EstimateButtons: Component<Props> = (props) => {
           </button>
         )}
       </For>
-      <span class="estimate-value">{formatTime(props.estimate)}</span>
+      <span
+        class="estimate-value"
+        tabIndex={0}
+        role="spinbutton"
+        aria-label="Time estimate"
+        onKeyDown={handleKeyDown}
+      >
+        {formatTime(props.estimate)}
+      </span>
       <For each={INCREMENTS}>
         {(inc) => (
           <button
