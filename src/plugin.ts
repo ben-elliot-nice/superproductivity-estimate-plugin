@@ -22,6 +22,14 @@ plugin.registerHook('anyTaskUpdate' as Parameters<typeof plugin.registerHook>[0]
   iframe?.contentWindow?.postMessage({ type: 'tasksUpdated' }, '*');
 });
 
+plugin.registerMenuEntry({
+      label: 'Estimates and Scheduler',
+      icon: 'dashboard',
+      onClick: () => {
+        plugin.showIndexHtmlAsView();
+      }
+    });
+
 if ((plugin as any).onMessage) {
   (plugin as any).onMessage(async (message: unknown) => {
     const msg = message as { type: string; payload?: any };
