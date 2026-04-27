@@ -1,9 +1,10 @@
 import { createMemo, createSignal, For, onMount, Show } from 'solid-js';
-import type { Project } from '@super-productivity/plugin-api';
+import type { PluginAPI as PluginAPIType, Project } from '@super-productivity/plugin-api';
 import type { Task } from './types';
 import { ProjectGroup } from './components/ProjectGroup';
-import { sendMessage } from './utils/sendMessage';
 import './App.css';
+
+declare const PluginAPI: PluginAPIType;
 
 interface GroupedProject {
   projectId: string | null;
@@ -50,11 +51,11 @@ function App() {
 
   const fetchData = async () => {
     const [fetchedTasks, fetchedProjects] = await Promise.all([
-      sendMessage<Task[]>('getTasks'),
-      sendMessage<Project[]>('getAllProjects'),
+      PluginAPI.getTasks() as Promise<Task[]>,
+      PluginAPI.getAllProjects(),
     ]);
     setTasks(fetchedTasks);
-    setProjects(fetchedProjects);
+    setProjects(fetchedProjects as Project[]);
   };
 
   onMount(async () => {
@@ -75,40 +76,34 @@ function App() {
       all.map((t) => (t.id === taskId ? { ...t, timeEstimate: newEstimate } : t)),
     );
     try {
-      await sendMessage('updateTask', { id: taskId, updates: { timeEstimate: newEstimate } });
+      await PluginAPI.updateTask(taskId, { timeEstimate: newEstimate });
     } catch {
       setTasks((all) => all.map((t) => (t.id === taskId ? { ...t, timeEstimate: prev } : t)));
-      sendMessage('showSnack', { msg: 'Failed to update estimate', type: 'ERROR' }).catch(
-        () => {},
-      );
+      (PluginAPI as any).showSnack({ msg: 'Failed to update estimate', type: 'ERROR' });
     }
   };
 
   const handleScheduleUpdate = async (taskId: string, timestamp: number) => {
     try {
-      await sendMessage('updateTask', { id: taskId, updates: { dueWithTime: timestamp } });
+      await PluginAPI.updateTask(taskId, { dueWithTime: timestamp } as any);
       setTasks((all) =>
         all.map((t) => (t.id === taskId ? { ...t, dueWithTime: timestamp } : t)),
       );
       setExpandedTaskId(null);
     } catch {
-      sendMessage('showSnack', { msg: 'Failed to update schedule', type: 'ERROR' }).catch(
-        () => {},
-      );
+      (PluginAPI as any).showSnack({ msg: 'Failed to update schedule', type: 'ERROR' });
     }
   };
 
   const handleScheduleClear = async (taskId: string) => {
     try {
-      await sendMessage('updateTask', { id: taskId, updates: { dueWithTime: null } });
+      await PluginAPI.updateTask(taskId, { dueWithTime: null } as any);
       setTasks((all) =>
         all.map((t) => (t.id === taskId ? { ...t, dueWithTime: null } : t)),
       );
       setExpandedTaskId(null);
     } catch {
-      sendMessage('showSnack', { msg: 'Failed to clear schedule', type: 'ERROR' }).catch(
-        () => {},
-      );
+      (PluginAPI as any).showSnack({ msg: 'Failed to clear schedule', type: 'ERROR' });
     }
   };
 
