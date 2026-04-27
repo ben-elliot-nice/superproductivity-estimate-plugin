@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, For } from 'solid-js';
+import { Component, createEffect, createMemo, createSignal, For } from 'solid-js';
 import { DayChip, getDayChips, getTimestamp, sameDay } from '../utils/schedulingUtils';
 
 interface Props {
@@ -17,11 +17,11 @@ const TIME_PRESETS = [
 export const StartTimePicker: Component<Props> = (props) => {
   const chips: DayChip[] = getDayChips();
 
-  const dateFromDueWithTime = () => {
+  const dateFromDueWithTime = createMemo(() => {
     if (!props.dueWithTime) return null;
     const d = new Date(props.dueWithTime);
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  };
+  });
 
   const [selectedDate, setSelectedDate] = createSignal<Date | null>(dateFromDueWithTime());
 
