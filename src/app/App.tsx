@@ -163,9 +163,11 @@ function App() {
 
   const handleEstimateUpdate = async (taskId: string, newEstimate: number) => {
     const prev = tasks().find((t) => t.id === taskId)?.timeEstimate ?? 0;
+    const savedScroll = window.scrollY;
     setTasks((all) =>
       all.map((t) => (t.id === taskId ? { ...t, timeEstimate: newEstimate } : t)),
     );
+    requestAnimationFrame(() => window.scrollTo({ top: savedScroll, behavior: 'instant' }));
     try {
       await PluginAPI.updateTask(taskId, { timeEstimate: newEstimate });
     } catch {
