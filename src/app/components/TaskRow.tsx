@@ -7,6 +7,14 @@ import { formatScheduledDate, getScheduleTiming } from '../utils/schedulingUtils
 
 const STALE_THRESHOLD_MS = 14 * 24 * 60 * 60 * 1000;
 
+const TIMING_COLORS: Record<string, string> = {
+  today:     '#ff9800',
+  tomorrow:  '#fbc02d',
+  'this-week': '#43a047',
+  future:    '#1e88e5',
+  overdue:   '#e53935',
+};
+
 interface Props {
   task: Task;
   isSubtask: boolean;
@@ -20,7 +28,10 @@ interface Props {
 
 export const TaskRow: Component<Props> = (props) => {
   const isScheduled = () => !!props.task.dueWithTime;
-  const timing = () => props.task.dueWithTime ? getScheduleTiming(props.task.dueWithTime) : null;
+  const timingColor = () => {
+    if (!props.task.dueWithTime) return undefined;
+    return TIMING_COLORS[getScheduleTiming(props.task.dueWithTime)];
+  };
 
   const isStale = () =>
     (props.task.timeEstimate ?? 0) > 0 &&
@@ -30,14 +41,8 @@ export const TaskRow: Component<Props> = (props) => {
   return (
     <div
       class="task-row"
-      classList={{
-        'task-row--scheduled': isScheduled(),
-        'task-row--today': timing() === 'today',
-        'task-row--tomorrow': timing() === 'tomorrow',
-        'task-row--this-week': timing() === 'this-week',
-        'task-row--future': timing() === 'future',
-        'task-row--overdue': timing() === 'overdue',
-      }}
+      classList={{ 'task-row--scheduled': isScheduled() }}
+      style={timingColor() ? { '--timing-color': timingColor()! } : undefined}
     >
       <div class={`task-row-main${props.isSubtask ? ' is-subtask' : ''}`}>
         <div

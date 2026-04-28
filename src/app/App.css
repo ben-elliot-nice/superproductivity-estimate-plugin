@@ -187,30 +187,20 @@
   background-color: var(--card-bg, rgba(0, 0, 0, 0.03));
 }
 
-/* Scheduled timing colours — border + subtle background tint */
-.task-row--scheduled { background-color: rgba(63, 81, 181, 0.03); }
-
-.task-row--today     { border-left-color: #e65100; background-color: rgba(230, 81, 0, 0.04); }
-.task-row--tomorrow  { border-left-color: #f9a825; background-color: rgba(249, 168, 37, 0.04); }
-.task-row--this-week { border-left-color: #388e3c; background-color: rgba(56, 142, 60, 0.04); }
-.task-row--future    { border-left-color: #1976d2; background-color: rgba(25, 118, 210, 0.04); }
-.task-row--overdue   { border-left-color: #c62828; background-color: rgba(198, 40, 40, 0.04); }
-
-.task-row--today:hover     { background-color: rgba(230, 81, 0, 0.08); }
-.task-row--tomorrow:hover  { background-color: rgba(249, 168, 37, 0.08); }
-.task-row--this-week:hover { background-color: rgba(56, 142, 60, 0.08); }
-.task-row--future:hover    { background-color: rgba(25, 118, 210, 0.08); }
-.task-row--overdue:hover   { background-color: rgba(198, 40, 40, 0.08); }
+/* Scheduled rows — colour driven by --timing-color set inline in TaskRow */
+.task-row--scheduled {
+  border-left-color: var(--timing-color, var(--c-primary, #3f51b5));
+}
 
 .task-row-main {
   display: flex;
   align-items: center;
   gap: var(--s, 8px);
-  padding: var(--s, 8px) 0;
+  padding: var(--s, 8px) var(--s, 8px);
 }
 
 .task-row-main.is-subtask {
-  padding-left: var(--s3, 24px);
+  padding-left: calc(var(--s3, 24px) + var(--s, 8px));
 }
 
 .task-title {
