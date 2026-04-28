@@ -1,10 +1,13 @@
-import { Component, createEffect, createMemo, createSignal, For } from 'solid-js';
+import { Component, createEffect, createMemo, createSignal, For, Show } from 'solid-js';
 import { DayChip, getDayChips, getTimestamp, sameDay } from '../utils/schedulingUtils';
+
+export type CascadeMode = 'cascade' | 'gap-close';
 
 interface Props {
   dueWithTime: number | null;
-  onUpdate: (timestamp: number) => void;
+  onUpdate: (timestamp: number, cascadeMode?: CascadeMode) => void;
   onClear: () => void;
+  showCascadeToggle?: boolean;
 }
 
 const TIME_PRESETS = [
@@ -16,6 +19,7 @@ const TIME_PRESETS = [
 
 export const StartTimePicker: Component<Props> = (props) => {
   const chips: DayChip[] = getDayChips();
+  const [cascade, setCascade] = createSignal(true);
 
   const dateFromDueWithTime = createMemo(() => {
     if (!props.dueWithTime) return null;
@@ -25,19 +29,35 @@ export const StartTimePicker: Component<Props> = (props) => {
 
   const [selectedDate, setSelectedDate] = createSignal<Date | null>(dateFromDueWithTime());
 
-  // Sync selectedDate when dueWithTime changes from outside
   createEffect(() => {
     setSelectedDate(dateFromDueWithTime());
   });
 
+  const emit = (timestamp: number) => {
+    props.onUpdate(
+      timestamp,
+      props.showCascadeToggle ? (cascade() ? 'cascade' : 'gap-close') : undefined,
+    );
+  };
+
   const handleTimeClick = (hour: number) => {
     const d = selectedDate();
     if (!d) return;
-    props.onUpdate(getTimestamp(d, hour));
+    emit(getTimestamp(d, hour));
   };
 
   return (
     <div class="start-time-picker" onClick={(e) => e.stopPropagation()}>
+      <Show when={props.showCascadeToggle}>
+        <label class="cascade-toggle">
+          <input
+            type="checkbox"
+            checked={cascade()}
+            onChange={(e) => setCascade(e.currentTarget.checked)}
+          />
+          Move subsequent tasks
+        </label>
+      </Show>
       <div class="picker-row">
         <For each={chips}>
           {(chip) => (
@@ -72,7 +92,7 @@ export const StartTimePicker: Component<Props> = (props) => {
             </button>
           )}
         </For>
-        <button class="chip btn-now" onClick={() => props.onUpdate(Date.now())}>
+        <button class="chip btn-now" onClick={() => emit(Date.now())}>
           Now
         </button>
         <button class="btn-clear" onClick={props.onClear}>

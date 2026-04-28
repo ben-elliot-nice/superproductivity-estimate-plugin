@@ -336,6 +336,16 @@ select.sort-select {
 
 /* ─── Start time picker ──────────────────────────────────────────────────── */
 
+.cascade-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--s, 8px);
+  font-size: 0.8rem;
+  color: var(--text-color-muted, #999);
+  cursor: pointer;
+  padding-bottom: var(--s, 8px);
+}
+
 .start-time-picker {
   padding: var(--s, 8px) 0 var(--s2, 16px) 0;
   border-top: 1px dashed var(--divider-color, #eee);

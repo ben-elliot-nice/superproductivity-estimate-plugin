@@ -1,7 +1,7 @@
 import { Component, Show } from 'solid-js';
 import type { Task } from '../types';
 import { EstimateButtons } from './EstimateButtons';
-import { StartTimePicker } from './StartTimePicker';
+import { StartTimePicker, CascadeMode } from './StartTimePicker';
 import { formatTime } from '../utils/formatTime';
 import { formatScheduledDate, getScheduleTiming } from '../utils/schedulingUtils';
 
@@ -21,9 +21,10 @@ interface Props {
   parentTitle?: string;
   isExpanded: boolean;
   showTimeLogged: boolean;
+  showCascadeToggle?: boolean;
   onToggleExpand: () => void;
   onEstimateUpdate: (newEstimate: number) => void;
-  onScheduleUpdate: (timestamp: number) => Promise<void>;
+  onScheduleUpdate: (timestamp: number, cascadeMode?: CascadeMode) => Promise<void>;
   onScheduleClear: () => Promise<void>;
 }
 
@@ -90,6 +91,7 @@ export const TaskRow: Component<Props> = (props) => {
       <Show when={props.isExpanded}>
         <StartTimePicker
           dueWithTime={props.task.dueWithTime ?? null}
+          showCascadeToggle={props.showCascadeToggle}
           onUpdate={props.onScheduleUpdate}
           onClear={props.onScheduleClear}
         />

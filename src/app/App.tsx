@@ -187,8 +187,16 @@ function App() {
     }
   };
 
-  const handleScheduleUpdate = async (taskId: string, timestamp: number) => {
+  const handleScheduleUpdate = async (
+    taskId: string,
+    timestamp: number,
+    cascadeMode?: 'cascade' | 'gap-close',
+  ) => {
     const savedScroll = window.scrollY;
+    // Capture original state before any mutations
+    const originalTask = tasks().find((t) => t.id === taskId);
+    const originalDueWithTime = originalTask?.dueWithTime;
+
     try {
       await PluginAPI.updateTask(taskId, { dueWithTime: timestamp } as any);
       setTasks((all) =>
@@ -196,10 +204,10 @@ function App() {
       );
       requestAnimationFrame(() => window.scrollTo({ top: savedScroll, behavior: 'instant' }));
 
-      // Propagate to subtasks if this is a parent task
-      const task = tasks().find((t) => t.id === taskId);
-      const subtaskIds = task?.subTaskIds ?? [];
+      const subtaskIds = originalTask?.subTaskIds ?? [];
+
       if (subtaskIds.length > 0) {
+        // ── Parent task: propagate to subtasks (existing behaviour) ──────────
         const subtasks = subtaskIds
           .map((id) => taskMap().get(id))
           .filter((t): t is Task => !!t && !t.isDone);
@@ -227,6 +235,49 @@ function App() {
             return upd ? { ...t, dueWithTime: upd.dueWithTime } : t;
           }),
         );
+      } else if (cascadeMode && originalTask?.parentId) {
+        // ── Subtask: cascade or gap-close mode ───────────────────────────────
+        const parent = taskMap().get(originalTask.parentId);
+        if (parent) {
+          const allSiblingIds = parent.subTaskIds ?? [];
+          const selectedIdx = allSiblingIds.indexOf(taskId);
+          const subsequent = allSiblingIds
+            .slice(selectedIdx + 1)
+            .map((id) => taskMap().get(id))
+            .filter((t): t is Task => !!t && !t.isDone);
+
+          let updates: { id: string; time: number }[] = [];
+
+          if (cascadeMode === 'cascade') {
+            // Move all subsequent subtasks sequentially from the new time
+            let cursor = timestamp + (originalTask.timeEstimate ?? 0);
+            for (const sub of subsequent) {
+              updates.push({ id: sub.id, time: cursor });
+              cursor += sub.timeEstimate ?? 0;
+            }
+          } else {
+            // Gap-close: repack only already-scheduled subsequent subtasks
+            // starting from where the selected task used to begin
+            const gapStart = originalDueWithTime ?? timestamp;
+            let cursor = gapStart;
+            for (const sub of subsequent.filter((t) => !!t.dueWithTime)) {
+              updates.push({ id: sub.id, time: cursor });
+              cursor += sub.timeEstimate ?? 0;
+            }
+          }
+
+          await Promise.all(
+            updates.map((u) =>
+              PluginAPI.updateTask(u.id, { dueWithTime: u.time } as any),
+            ),
+          );
+          setTasks((all) =>
+            all.map((t) => {
+              const u = updates.find((u) => u.id === t.id);
+              return u ? { ...t, dueWithTime: u.time } : t;
+            }),
+          );
+        }
       }
 
       setExpandedTaskId(null);
