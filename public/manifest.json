@@ -17,11 +17,6 @@
   ],
   "changelog": {
     "1.1.0": "Minor release — filter bar redesign (cycling emoji buttons), scheduled badge left-border colour matches timing, Now button in scheduler, CSS var cleanup, tsconfig/vite-env fixes, persist project collapse state, fix schedule time minutes display",
-    "1.0.6": "Implement all enhancements — hover highlight, remove ±5m/±5h buttons, project colour theming, pinned filter/sort bar, scheduled vs unscheduled visualisation, total estimate footer, keyboard navigation, estimate staleness indicator, schedule propagation to subtasks with confirmation modal",
-    "1.0.5": "Call PluginAPI directly in iframe — remove unnecessary postMessage bridge",
-    "1.0.4": "Add bridge debug logging",
-    "1.0.2": "Fix plugin loader registration",
-    "1.0.1": "Remove dist from tracking, add CI release workflow",
     "1.0.0": "Initial release — task estimate editing and schedule start time picker across all projects"
   }
 }
