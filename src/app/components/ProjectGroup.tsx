@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For, Show } from 'solid-js';
+import { Component, createMemo, For, Show } from 'solid-js';
 import type { Task } from '../types';
 import { TaskRow } from './TaskRow';
 
@@ -11,6 +11,8 @@ interface FlatRow {
 interface Props {
   projectTitle: string;
   projectColor?: string;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
   tasks: Task[]; // top-level tasks only
   taskMap: Map<string, Task>;
   showDone: boolean;
@@ -22,8 +24,6 @@ interface Props {
 }
 
 export const ProjectGroup: Component<Props> = (props) => {
-  const [collapsed, setCollapsed] = createSignal(false);
-
   const flatRows = createMemo((): FlatRow[] =>
     props.tasks.flatMap((task) => {
       const subtasks = (task.subTaskIds ?? [])
@@ -41,13 +41,13 @@ export const ProjectGroup: Component<Props> = (props) => {
       <div
         class="project-header"
         style={props.projectColor ? { '--project-color': props.projectColor } : undefined}
-        onClick={() => setCollapsed((c) => !c)}
+        onClick={props.onToggleCollapse}
       >
-        <span class="project-collapse-icon">{collapsed() ? '▶' : '▼'}</span>
+        <span class="project-collapse-icon">{props.isCollapsed ? '▶' : '▼'}</span>
         <span class="project-title">{props.projectTitle}</span>
         <span class="project-task-count">({props.tasks.length})</span>
       </div>
-      <Show when={!collapsed()}>
+      <Show when={!props.isCollapsed}>
         <For each={flatRows()}>
           {(row) => (
             <TaskRow

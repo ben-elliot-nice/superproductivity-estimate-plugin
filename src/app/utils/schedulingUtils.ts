@@ -49,7 +49,8 @@ export function formatScheduledDate(dueWithTime: number): string {
   const d = new Date(dueWithTime);
   const now = new Date();
   const hour = String(d.getHours()).padStart(2, '0');
-  const time = `${hour}:00`;
+  const min = String(d.getMinutes()).padStart(2, '0');
+  const time = `${hour}:${min}`;
   const day = DAY_NAMES[d.getDay()];
 
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());

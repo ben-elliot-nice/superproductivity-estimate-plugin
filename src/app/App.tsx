@@ -30,6 +30,16 @@ function App() {
   const [expandedTaskId, setExpandedTaskId] = createSignal<string | null>(null);
   const [filter, setFilter] = createSignal<FilterState>(DEFAULT_FILTER);
   const [modalConfig, setModalConfig] = createSignal<ModalConfig | null>(null);
+  const [collapsedProjects, setCollapsedProjects] = createSignal<Set<string | null>>(new Set());
+
+  const handleToggleCollapse = (projectId: string | null) => {
+    setCollapsedProjects((prev) => {
+      const next = new Set(prev);
+      if (next.has(projectId)) next.delete(projectId);
+      else next.add(projectId);
+      return next;
+    });
+  };
 
   const taskMap = createMemo(() => new Map(tasks().map((t) => [t.id, t])));
 
@@ -292,6 +302,8 @@ function App() {
               <ProjectGroup
                 projectTitle={group.title}
                 projectColor={group.projectColor}
+                isCollapsed={collapsedProjects().has(group.projectId)}
+                onToggleCollapse={() => handleToggleCollapse(group.projectId)}
                 tasks={group.tasks}
                 taskMap={taskMap()}
                 showDone={showDone()}
