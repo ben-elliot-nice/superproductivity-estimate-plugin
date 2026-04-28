@@ -13,13 +13,13 @@ interface Increment {
 
 const DECREMENTS: Increment[] = [
   { label: '−1h', ms: -60 * 60_000 },
-  { label: '−30m', ms: -30 * 60_000 },
   { label: '−15m', ms: -15 * 60_000 },
+  { label: '−5m', ms: -5 * 60_000 },
 ];
 
 const INCREMENTS: Increment[] = [
+  { label: '+5m', ms: 5 * 60_000 },
   { label: '+15m', ms: 15 * 60_000 },
-  { label: '+30m', ms: 30 * 60_000 },
   { label: '+1h', ms: 60 * 60_000 },
 ];
 
