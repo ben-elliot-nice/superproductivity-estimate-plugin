@@ -1,9 +1,10 @@
 export function formatTime(ms: number): string {
-  if (ms <= 0) return '—';
+  if (ms <= 0) return '';
   const totalMinutes = Math.round(ms / 60_000);
-  if (totalMinutes === 0) return '—';
+  if (totalMinutes === 0) return '';
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
+  if (hours >= 100) return `${hours}h`;   // drop minutes above 2-digit hours
   if (hours === 0) return `${minutes}m`;
   if (minutes === 0) return `${hours}h`;
   return `${hours}h ${minutes}m`;

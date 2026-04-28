@@ -1,26 +1,39 @@
 import { Component, Show } from 'solid-js';
 import type { Task } from '../types';
 import { EstimateButtons } from './EstimateButtons';
-import { StartTimePicker } from './StartTimePicker';
+import { StartTimePicker, CascadeMode } from './StartTimePicker';
 import { formatTime } from '../utils/formatTime';
 import { formatScheduledDate, getScheduleTiming } from '../utils/schedulingUtils';
 
 const STALE_THRESHOLD_MS = 14 * 24 * 60 * 60 * 1000;
+
+const TIMING_COLORS: Record<string, string> = {
+  today:       '#ffe0b2',
+  tomorrow:    '#fff9c4',
+  'this-week': '#c8e6c9',
+  future:      '#bbdefb',
+  overdue:     '#ffcdd2',
+};
 
 interface Props {
   task: Task;
   isSubtask: boolean;
   parentTitle?: string;
   isExpanded: boolean;
+  showTimeLogged: boolean;
+  showCascadeToggle?: boolean;
   onToggleExpand: () => void;
   onEstimateUpdate: (newEstimate: number) => void;
-  onScheduleUpdate: (timestamp: number) => Promise<void>;
+  onScheduleUpdate: (timestamp: number, cascadeMode?: CascadeMode) => Promise<void>;
   onScheduleClear: () => Promise<void>;
 }
 
 export const TaskRow: Component<Props> = (props) => {
   const isScheduled = () => !!props.task.dueWithTime;
-  const timing = () => props.task.dueWithTime ? getScheduleTiming(props.task.dueWithTime) : null;
+  const timingColor = () => {
+    if (!props.task.dueWithTime) return undefined;
+    return TIMING_COLORS[getScheduleTiming(props.task.dueWithTime)];
+  };
 
   const isStale = () =>
     (props.task.timeEstimate ?? 0) > 0 &&
@@ -30,14 +43,8 @@ export const TaskRow: Component<Props> = (props) => {
   return (
     <div
       class="task-row"
-      classList={{
-        'task-row--scheduled': isScheduled(),
-        'task-row--today': timing() === 'today',
-        'task-row--tomorrow': timing() === 'tomorrow',
-        'task-row--this-week': timing() === 'this-week',
-        'task-row--future': timing() === 'future',
-        'task-row--overdue': timing() === 'overdue',
-      }}
+      classList={{ 'task-row--scheduled': isScheduled() }}
+      style={timingColor() ? { '--timing-color': timingColor()! } : undefined}
     >
       <div class={`task-row-main${props.isSubtask ? ' is-subtask' : ''}`}>
         <div
@@ -72,7 +79,9 @@ export const TaskRow: Component<Props> = (props) => {
               {formatScheduledDate(props.task.dueWithTime!)}
             </span>
           </Show>
-          <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
+          <Show when={props.showTimeLogged && (props.task.timeSpent ?? 0) > 0}>
+            <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
+          </Show>
         </div>
         <EstimateButtons
           estimate={props.task.timeEstimate}
@@ -82,6 +91,7 @@ export const TaskRow: Component<Props> = (props) => {
       <Show when={props.isExpanded}>
         <StartTimePicker
           dueWithTime={props.task.dueWithTime ?? null}
+          showCascadeToggle={props.showCascadeToggle}
           onUpdate={props.onScheduleUpdate}
           onClear={props.onScheduleClear}
         />
