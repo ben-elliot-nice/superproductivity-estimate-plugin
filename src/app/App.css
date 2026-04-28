@@ -222,10 +222,40 @@
 
 .scheduled-badge {
   font-size: 0.72rem;
-  background: var(--c-primary, #3f51b5);
-  color: #fff;
   padding: 2px var(--s, 8px);
   border-radius: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Today — soft orange */
+.scheduled-badge.badge--today {
+  background: #ffe0b2;
+  color: #7f3300;
+}
+
+/* Tomorrow — soft yellow */
+.scheduled-badge.badge--tomorrow {
+  background: #fff9c4;
+  color: #5f4800;
+}
+
+/* Inside 7 days — soft green */
+.scheduled-badge.badge--this-week {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+/* Outside 7 days — soft blue */
+.scheduled-badge.badge--future {
+  background: #bbdefb;
+  color: #0d3c6e;
+}
+
+/* Overdue — soft red */
+.scheduled-badge.badge--overdue {
+  background: #ffcdd2;
+  color: #7f0000;
 }
 
 .time-logged {

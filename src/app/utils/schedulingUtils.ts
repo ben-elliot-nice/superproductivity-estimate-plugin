@@ -28,6 +28,23 @@ export function getTimestamp(date: Date, hour: number): number {
   ).getTime();
 }
 
+export type ScheduleTiming = 'today' | 'tomorrow' | 'this-week' | 'future' | 'overdue';
+
+export function getScheduleTiming(dueWithTime: number): ScheduleTiming {
+  const now = new Date();
+  const d = new Date(dueWithTime);
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfTarget = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round(
+    (startOfTarget.getTime() - startOfToday.getTime()) / (24 * 60 * 60 * 1000),
+  );
+  if (diffDays < 0) return 'overdue';
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return 'tomorrow';
+  if (diffDays < 7) return 'this-week';
+  return 'future';
+}
+
 export function formatScheduledDate(dueWithTime: number): string {
   const d = new Date(dueWithTime);
   const now = new Date();

@@ -3,7 +3,7 @@ import type { Task } from '../types';
 import { EstimateButtons } from './EstimateButtons';
 import { StartTimePicker } from './StartTimePicker';
 import { formatTime } from '../utils/formatTime';
-import { formatScheduledDate } from '../utils/schedulingUtils';
+import { formatScheduledDate, getScheduleTiming } from '../utils/schedulingUtils';
 
 const STALE_THRESHOLD_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -57,8 +57,11 @@ export const TaskRow: Component<Props> = (props) => {
         </div>
         <div class="task-meta" onClick={props.onToggleExpand}>
           <Show when={props.task.dueWithTime}>
-            <span class="scheduled-badge">
-              ⏱ {formatScheduledDate(props.task.dueWithTime!)}
+            <span
+              class="scheduled-badge"
+              classList={{ [`badge--${getScheduleTiming(props.task.dueWithTime!)}`]: true }}
+            >
+              {formatScheduledDate(props.task.dueWithTime!)}
             </span>
           </Show>
           <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
