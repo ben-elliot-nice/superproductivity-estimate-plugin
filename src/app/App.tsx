@@ -70,7 +70,7 @@ function App() {
           projectId: p.id,
           title: p.title,
           tasks: byProject.get(p.id)!,
-          projectColor: (p as any).color as string | undefined,
+          projectColor: (p as any).theme?.primary as string | undefined,
         }),
       );
 
