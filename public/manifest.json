@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.1.10",
+  "version": "1.2.0",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
@@ -16,17 +16,8 @@
     "anyTaskUpdate"
   ],
   "changelog": {
-    "1.1.10": "Scheduler UI refactor — right-justified date row, Clear left-justified, Now before time presets, calendar overlay for date selection, freetext time input with parser (5pm → 17:00, 3.30am → 03:30)",
-    "1.1.9": "Subtask cascade scheduling — 'Move subsequent tasks' toggle in time picker; cascade mode reschedules all following subtasks from new time; gap-close mode repacks remaining scheduled siblings to fill the vacated slot",
-    "1.1.8": "Add margin-right to clear button in time picker",
-    "1.1.7": "Fix sort select overflowing due to SP UI kit width:100% override",
-    "1.1.6": "Show time logged toggle in header; filter bar collapses to single row with search filling remaining width",
-    "1.1.5": "Hide elapsed time dash when zero; fixed-width estimate display (7ch); drop minutes from display above 99h",
-    "1.1.4": "Estimate buttons changed to 1h / 15m / 5m increments",
-    "1.1.3": "Preserve scroll position on schedule clear",
-    "1.1.2": "Scheduled left border colour now matches badge palette exactly",
-    "1.1.1": "Fix scheduled left border colour using inline CSS var; add content inset padding to prevent overlap with border",
-    "1.1.0": "Minor release — filter bar redesign (cycling emoji buttons), scheduled badge left-border colour matches timing, Now button in scheduler, CSS var cleanup, tsconfig/vite-env fixes, persist project collapse state, fix schedule time minutes display",
+    "1.2.0": "Subtask cascade scheduling (move subsequent or gap-close mode); scheduler UI with calendar overlay and freetext time parser (5pm, 3.30am); show time logged toggle; single-row filter/sort bar; estimate buttons 1h/15m/5m; smart estimate display (fixed width, drops minutes above 99h); scheduled row left border matches badge colour; scroll preserved across all interactions",
+    "1.1.0": "Filter bar redesign (cycling emoji buttons), scheduled badge colour-coded by timing, Now button, CSS var cleanup, collapse state persistence, schedule time minute precision",
     "1.0.0": "Initial release — task estimate editing and schedule start time picker across all projects"
   }
 }
