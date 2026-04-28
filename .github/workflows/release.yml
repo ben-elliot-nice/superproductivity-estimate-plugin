@@ -1,0 +1,78 @@
+name: Build and release plugin
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build plugin
+        run: npm run build
+
+      - name: Resolve version and tag
+        id: version
+        run: |
+          VERSION=$(node -e "console.log(require('./public/manifest.json').version)")
+          BRANCH="${{ github.ref_name }}"
+          if [ "$BRANCH" = "dev" ]; then
+            FULL_VERSION="${VERSION}-dev"
+            PRERELEASE="true"
+          else
+            FULL_VERSION="$VERSION"
+            PRERELEASE="false"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "full_version=$FULL_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v${FULL_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+
+      - name: Package plugin zip
+        run: |
+          cd dist
+          zip -r "../estimate-scheduler-v${{ steps.version.outputs.full_version }}.zip" .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: estimate-scheduler-v${{ steps.version.outputs.full_version }}
+          path: estimate-scheduler-v${{ steps.version.outputs.full_version }}.zip
+          retention-days: 90
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          ZIP="estimate-scheduler-v${{ steps.version.outputs.full_version }}.zip"
+          FULL_VERSION="${{ steps.version.outputs.full_version }}"
+          PRERELEASE="${{ steps.version.outputs.prerelease }}"
+
+          PRERELEASE_FLAG=""
+          [ "$PRERELEASE" = "true" ] && PRERELEASE_FLAG="--prerelease"
+
+          if gh release view "$TAG" &>/dev/null; then
+            echo "Release $TAG already exists — updating asset"
+            gh release upload "$TAG" "$ZIP" --clobber
+          else
+            echo "Creating release $TAG"
+            gh release create "$TAG" "$ZIP" \
+              --title "Estimate & Scheduler v${FULL_VERSION}" \
+              --notes "See changelog in \`public/manifest.json\`." \
+              $PRERELEASE_FLAG
+          fi

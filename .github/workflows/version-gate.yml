@@ -1,0 +1,46 @@
+name: Version gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR version
+        id: pr
+        run: |
+          VERSION=$(node -e "console.log(require('./public/manifest.json').version)")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get main version
+        id: base
+        run: |
+          VERSION=$(git show origin/main:public/manifest.json | node -e "
+            let d='';
+            process.stdin.on('data', c => d += c).on('end', () =>
+              console.log(JSON.parse(d).version)
+            );
+          ")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify minor or major bump
+        run: |
+          PR="${{ steps.pr.outputs.version }}"
+          BASE="${{ steps.base.outputs.version }}"
+          node -e "
+            const [pMaj, pMin] = '$PR'.split('.').map(Number);
+            const [bMaj, bMin] = '$BASE'.split('.').map(Number);
+            if (pMaj > bMaj || (pMaj === bMaj && pMin > bMin)) {
+              console.log('✓ Version bump OK: $BASE → $PR');
+            } else {
+              console.error('✗ PR must increment major or minor version to merge into main.');
+              console.error('  main: $BASE  →  this PR: $PR');
+              process.exit(1);
+            }
+          "
