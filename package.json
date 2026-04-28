@@ -1,6 +1,6 @@
 {
   "name": "superproductivity-estimate-plugin",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Rapidly edit task estimates and schedule start times",
   "type": "module",
   "scripts": {

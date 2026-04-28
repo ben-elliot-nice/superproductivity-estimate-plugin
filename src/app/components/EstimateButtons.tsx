@@ -60,7 +60,7 @@ export const EstimateButtons: Component<Props> = (props) => {
         aria-label="Time estimate"
         onKeyDown={handleKeyDown}
       >
-        {formatTime(props.estimate)}
+        {formatTime(props.estimate) || '—'}
       </span>
       <For each={INCREMENTS}>
         {(inc) => (

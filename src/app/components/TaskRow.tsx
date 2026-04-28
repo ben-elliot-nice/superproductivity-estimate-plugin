@@ -77,7 +77,9 @@ export const TaskRow: Component<Props> = (props) => {
               {formatScheduledDate(props.task.dueWithTime!)}
             </span>
           </Show>
-          <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
+          <Show when={(props.task.timeSpent ?? 0) > 0}>
+            <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
+          </Show>
         </div>
         <EstimateButtons
           estimate={props.task.timeEstimate}
