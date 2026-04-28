@@ -177,11 +177,13 @@ function App() {
   };
 
   const handleScheduleUpdate = async (taskId: string, timestamp: number) => {
+    const savedScroll = window.scrollY;
     try {
       await PluginAPI.updateTask(taskId, { dueWithTime: timestamp } as any);
       setTasks((all) =>
         all.map((t) => (t.id === taskId ? { ...t, dueWithTime: timestamp } : t)),
       );
+      requestAnimationFrame(() => window.scrollTo({ top: savedScroll, behavior: 'instant' }));
 
       // Propagate to subtasks if this is a parent task
       const task = tasks().find((t) => t.id === taskId);
