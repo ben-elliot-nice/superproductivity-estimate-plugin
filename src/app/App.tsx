@@ -235,6 +235,7 @@ function App() {
   };
 
   const handleScheduleClear = async (taskId: string) => {
+    const savedScroll = window.scrollY;
     try {
       const task = tasks().find((t) => t.id === taskId);
       const scheduledSubs = (task?.subTaskIds ?? [])
@@ -264,6 +265,7 @@ function App() {
       setTasks((all) =>
         all.map((t) => (t.id === taskId ? { ...t, dueWithTime: null } : t)),
       );
+      requestAnimationFrame(() => window.scrollTo({ top: savedScroll, behavior: 'instant' }));
       setExpandedTaskId(null);
     } catch {
       (PluginAPI as any).showSnack({ msg: 'Failed to clear schedule', type: 'ERROR' });
