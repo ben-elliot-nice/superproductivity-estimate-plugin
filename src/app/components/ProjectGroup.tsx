@@ -16,6 +16,7 @@ interface Props {
   tasks: Task[]; // top-level tasks only
   taskMap: Map<string, Task>;
   showDone: boolean;
+  showTimeLogged: boolean;
   expandedTaskId: string | null;
   onToggleExpand: (taskId: string) => void;
   onEstimateUpdate: (taskId: string, newEstimate: number) => void;
@@ -55,6 +56,7 @@ export const ProjectGroup: Component<Props> = (props) => {
               isSubtask={row.isSubtask}
               parentTitle={row.parentTitle}
               isExpanded={props.expandedTaskId === row.task.id}
+              showTimeLogged={props.showTimeLogged}
               onToggleExpand={() => props.onToggleExpand(row.task.id)}
               onEstimateUpdate={(newEstimate) =>
                 props.onEstimateUpdate(row.task.id, newEstimate)

@@ -27,6 +27,7 @@ function App() {
   const [projects, setProjects] = createSignal<Project[]>([]);
   const [loading, setLoading] = createSignal(true);
   const [showDone, setShowDone] = createSignal(false);
+  const [showTimeLogged, setShowTimeLogged] = createSignal(false);
   const [expandedTaskId, setExpandedTaskId] = createSignal<string | null>(null);
   const [filter, setFilter] = createSignal<FilterState>(DEFAULT_FILTER);
   const [modalConfig, setModalConfig] = createSignal<ModalConfig | null>(null);
@@ -283,14 +284,24 @@ function App() {
       <div class="app-sticky-top">
         <header class="app-header">
           <h1>Estimates &amp; Schedule</h1>
-          <label class="show-done-toggle">
-            <input
-              type="checkbox"
-              checked={showDone()}
-              onChange={(e) => setShowDone(e.currentTarget.checked)}
-            />
-            Show done
-          </label>
+          <div class="header-toggles">
+            <label class="header-toggle">
+              <input
+                type="checkbox"
+                checked={showDone()}
+                onChange={(e) => setShowDone(e.currentTarget.checked)}
+              />
+              Show done
+            </label>
+            <label class="header-toggle">
+              <input
+                type="checkbox"
+                checked={showTimeLogged()}
+                onChange={(e) => setShowTimeLogged(e.currentTarget.checked)}
+              />
+              Show time logged
+            </label>
+          </div>
         </header>
         <FilterBar filter={filter()} onChange={setFilter} />
       </div>
@@ -309,6 +320,7 @@ function App() {
                 tasks={group.tasks}
                 taskMap={taskMap()}
                 showDone={showDone()}
+                showTimeLogged={showTimeLogged()}
                 expandedTaskId={expandedTaskId()}
                 onToggleExpand={handleToggleExpand}
                 onEstimateUpdate={handleEstimateUpdate}

@@ -20,6 +20,7 @@ interface Props {
   isSubtask: boolean;
   parentTitle?: string;
   isExpanded: boolean;
+  showTimeLogged: boolean;
   onToggleExpand: () => void;
   onEstimateUpdate: (newEstimate: number) => void;
   onScheduleUpdate: (timestamp: number) => Promise<void>;
@@ -77,7 +78,7 @@ export const TaskRow: Component<Props> = (props) => {
               {formatScheduledDate(props.task.dueWithTime!)}
             </span>
           </Show>
-          <Show when={(props.task.timeSpent ?? 0) > 0}>
+          <Show when={props.showTimeLogged && (props.task.timeSpent ?? 0) > 0}>
             <span class="time-logged">{formatTime(props.task.timeSpent)}</span>
           </Show>
         </div>
