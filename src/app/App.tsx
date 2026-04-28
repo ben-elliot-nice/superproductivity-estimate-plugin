@@ -189,7 +189,7 @@ function App() {
       if (subtaskIds.length > 0) {
         const subtasks = subtaskIds
           .map((id) => taskMap().get(id))
-          .filter((t): t is Task => !!t);
+          .filter((t): t is Task => !!t && !t.isDone);
 
         if (hasScheduledSubtasks(subtasks)) {
           const count = subtasks.filter((t) => !!t.dueWithTime).length;
@@ -227,7 +227,7 @@ function App() {
       const task = tasks().find((t) => t.id === taskId);
       const scheduledSubs = (task?.subTaskIds ?? [])
         .map((id) => taskMap().get(id))
-        .filter((t): t is Task => !!t && !!t.dueWithTime);
+        .filter((t): t is Task => !!t && !!t.dueWithTime && !t.isDone);
 
       if (scheduledSubs.length > 0) {
         const n = scheduledSubs.length;
