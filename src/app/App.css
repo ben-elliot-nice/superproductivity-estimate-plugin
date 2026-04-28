@@ -359,6 +359,22 @@ select.sort-select {
   margin-bottom: var(--s, 8px);
 }
 
+.picker-row--right {
+  justify-content: flex-end;
+}
+
+.picker-row--time {
+  align-items: center;
+}
+
+.picker-time-right {
+  display: flex;
+  align-items: center;
+  gap: var(--s, 8px);
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
 .chip {
   background: var(--card-bg, #f5f5f5);
   border: 1px solid var(--divider-color, #ddd);
@@ -380,6 +396,10 @@ select.sort-select {
   cursor: default;
 }
 
+.chip--calendar {
+  font-size: 0.75rem;
+}
+
 .btn-now {
   background: var(--c-accent, #ff9800);
   border-color: var(--c-accent, #ff9800);
@@ -395,11 +415,10 @@ select.sort-select {
   border: 1px solid var(--c-warn, #f44336);
   color: var(--c-warn, #f44336);
   border-radius: 3px;
-  margin-right: var(--s, 8px);
   padding: 4px 12px;
   font-size: 0.8rem;
   cursor: pointer;
-  margin-left: auto;
+  flex-shrink: 0;
   transition: background-color var(--transition-standard, 150ms ease),
               color var(--transition-standard, 150ms ease);
 }
@@ -407,6 +426,128 @@ select.sort-select {
 .btn-clear:hover {
   background: var(--c-warn, #f44336);
   color: #fff;
+}
+
+/* ─── Time input ─────────────────────────────────────────────────────────── */
+
+input.time-input {
+  width: 72px;
+  padding: 4px 8px;
+  border: 1px solid var(--divider-color, #ddd);
+  border-radius: 14px;
+  font-size: 0.8rem;
+  background: var(--card-bg, #f5f5f5);
+  color: var(--text-color, #333);
+  text-align: center;
+  outline: none;
+}
+
+input.time-input:focus {
+  border-color: var(--c-primary, #3f51b5);
+}
+
+/* ─── Calendar overlay ───────────────────────────────────────────────────── */
+
+.calendar-wrap {
+  position: relative;
+}
+
+.calendar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+}
+
+.calendar-overlay {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  z-index: 50;
+  background: var(--bg, #fff);
+  border: 1px solid var(--divider-color, #ddd);
+  border-radius: var(--card-border-radius, 8px);
+  box-shadow: var(--whiteframe-shadow-8dp, 0 8px 24px rgba(0,0,0,0.2));
+  padding: var(--s, 8px);
+  min-width: 224px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s, 8px);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.calendar-nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 1.1rem;
+  color: var(--text-color, #333);
+  line-height: 1;
+  width: auto;
+}
+
+.calendar-nav button:hover {
+  color: var(--c-primary, #3f51b5);
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.calendar-days-header span {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-color-muted, #999);
+  padding: 2px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+button.calendar-day {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-color, #333);
+  padding: 0;
+  line-height: 1;
+}
+
+button.calendar-day:hover:not(:disabled):not(.selected) {
+  background: var(--card-bg, #f5f5f5);
+}
+
+button.calendar-day.today {
+  color: var(--c-primary, #3f51b5);
+  font-weight: 700;
+}
+
+button.calendar-day.selected {
+  background: var(--c-primary, #3f51b5);
+  color: #fff;
+}
+
+button.calendar-day.empty,
+button.calendar-day:disabled {
+  cursor: default;
+  opacity: 0;
 }
 
 /* ─── Modal ──────────────────────────────────────────────────────────────── */
