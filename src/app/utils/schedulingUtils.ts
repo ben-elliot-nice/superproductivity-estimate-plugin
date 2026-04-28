@@ -30,9 +30,24 @@ export function getTimestamp(date: Date, hour: number): number {
 
 export function formatScheduledDate(dueWithTime: number): string {
   const d = new Date(dueWithTime);
-  const day = DAY_NAMES[d.getDay()];
+  const now = new Date();
   const hour = String(d.getHours()).padStart(2, '0');
-  return `${day} ${hour}:00`;
+  const time = `${hour}:00`;
+  const day = DAY_NAMES[d.getDay()];
+
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfTarget = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round(
+    (startOfTarget.getTime() - startOfToday.getTime()) / (24 * 60 * 60 * 1000),
+  );
+
+  if (diffDays === 0) return `Today ${time}`;
+  if (diffDays === 1) return `Tomorrow ${time}`;
+  if (diffDays > 1 && diffDays < 7) return `${day} This Week ${time}`;
+
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return `${day} ${dd}/${mm} ${time}`;
 }
 
 export function sameDay(a: Date, b: Date): boolean {

@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
