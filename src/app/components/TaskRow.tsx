@@ -20,6 +20,7 @@ interface Props {
 
 export const TaskRow: Component<Props> = (props) => {
   const isScheduled = () => !!props.task.dueWithTime;
+  const timing = () => props.task.dueWithTime ? getScheduleTiming(props.task.dueWithTime) : null;
 
   const isStale = () =>
     (props.task.timeEstimate ?? 0) > 0 &&
@@ -29,7 +30,14 @@ export const TaskRow: Component<Props> = (props) => {
   return (
     <div
       class="task-row"
-      classList={{ 'task-row--scheduled': isScheduled() }}
+      classList={{
+        'task-row--scheduled': isScheduled(),
+        'task-row--today': timing() === 'today',
+        'task-row--tomorrow': timing() === 'tomorrow',
+        'task-row--this-week': timing() === 'this-week',
+        'task-row--future': timing() === 'future',
+        'task-row--overdue': timing() === 'overdue',
+      }}
     >
       <div class={`task-row-main${props.isSubtask ? ' is-subtask' : ''}`}>
         <div

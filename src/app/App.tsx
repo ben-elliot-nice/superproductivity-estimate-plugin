@@ -107,11 +107,11 @@ function App() {
         }
       }
 
-      // Chip filters
-      if (f.scheduled) groupTasks = groupTasks.filter((t) => !!t.dueWithTime);
-      if (f.unscheduled) groupTasks = groupTasks.filter((t) => !t.dueWithTime);
-      if (f.estimated) groupTasks = groupTasks.filter((t) => (t.timeEstimate ?? 0) > 0);
-      if (f.unestimated) groupTasks = groupTasks.filter((t) => !(t.timeEstimate ?? 0));
+      // Cycle filters
+      if (f.scheduleFilter === 'scheduled') groupTasks = groupTasks.filter((t) => !!t.dueWithTime);
+      if (f.scheduleFilter === 'unscheduled') groupTasks = groupTasks.filter((t) => !t.dueWithTime);
+      if (f.estimateFilter === 'estimated') groupTasks = groupTasks.filter((t) => (t.timeEstimate ?? 0) > 0);
+      if (f.estimateFilter === 'unestimated') groupTasks = groupTasks.filter((t) => !(t.timeEstimate ?? 0));
 
       if (!groupTasks.length) return [];
 

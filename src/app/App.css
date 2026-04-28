@@ -57,7 +57,7 @@
   box-sizing: border-box;
   padding: 6px 10px;
   border: 1px solid var(--divider-color, #ddd);
-  border-radius: 4px;
+  border-radius: var(--card-border-radius, 4px);
   font-size: 0.875rem;
   background: var(--card-bg, #f5f5f5);
   color: var(--text-color, #333);
@@ -72,18 +72,52 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+
+/* Cycling filter buttons */
+.filter-cycle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border: 1px solid var(--divider-color, #ddd);
+  border-radius: 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: var(--card-bg, #f5f5f5);
+  color: var(--text-color-muted, #999);
+  white-space: nowrap;
+  transition: background-color var(--transition-standard, 150ms ease),
+              color var(--transition-standard, 150ms ease),
+              border-color var(--transition-standard, 150ms ease);
+  flex-shrink: 0;
+}
+
+/* Active (positive filter — blue) */
+.filter-cycle-btn.filter-cycle--active {
+  background: var(--c-primary, #3f51b5);
+  color: #fff;
+  border-color: var(--c-primary, #3f51b5);
+}
+
+/* Inverse (negative filter — orange) */
+.filter-cycle-btn.filter-cycle--inverse {
+  background: #e65100;
+  color: #fff;
+  border-color: #e65100;
 }
 
 .sort-select {
   margin-left: auto;
   padding: 3px 6px;
   border: 1px solid var(--divider-color, #ddd);
-  border-radius: 4px;
+  border-radius: var(--card-border-radius, 4px);
   font-size: 0.8rem;
   background: var(--card-bg, #f5f5f5);
   color: var(--text-color, #333);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* ─── Loading / empty states ─────────────────────────────────────────────── */
@@ -133,7 +167,8 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   user-select: none;
-  transition: border-color 200ms ease, color 200ms ease;
+  transition: border-color var(--transition-standard, 200ms ease),
+              color var(--transition-standard, 200ms ease);
 }
 
 .project-collapse-icon {
@@ -145,21 +180,27 @@
 .task-row {
   border-bottom: 1px solid var(--divider-color, #eee);
   border-left: 3px solid transparent;
-  transition: background-color 150ms ease;
+  transition: background-color var(--transition-standard, 150ms ease);
 }
 
 .task-row:hover {
   background-color: var(--card-bg, rgba(0, 0, 0, 0.03));
 }
 
-.task-row--scheduled {
-  border-left-color: var(--c-primary, #3f51b5);
-  background-color: rgba(63, 81, 181, 0.03);
-}
+/* Scheduled timing colours — border + subtle background tint */
+.task-row--scheduled { background-color: rgba(63, 81, 181, 0.03); }
 
-.task-row--scheduled:hover {
-  background-color: rgba(63, 81, 181, 0.07);
-}
+.task-row--today     { border-left-color: #e65100; background-color: rgba(230, 81, 0, 0.04); }
+.task-row--tomorrow  { border-left-color: #f9a825; background-color: rgba(249, 168, 37, 0.04); }
+.task-row--this-week { border-left-color: #388e3c; background-color: rgba(56, 142, 60, 0.04); }
+.task-row--future    { border-left-color: #1976d2; background-color: rgba(25, 118, 210, 0.04); }
+.task-row--overdue   { border-left-color: #c62828; background-color: rgba(198, 40, 40, 0.04); }
+
+.task-row--today:hover     { background-color: rgba(230, 81, 0, 0.08); }
+.task-row--tomorrow:hover  { background-color: rgba(249, 168, 37, 0.08); }
+.task-row--this-week:hover { background-color: rgba(56, 142, 60, 0.08); }
+.task-row--future:hover    { background-color: rgba(25, 118, 210, 0.08); }
+.task-row--overdue:hover   { background-color: rgba(198, 40, 40, 0.08); }
 
 .task-row-main {
   display: flex;
@@ -220,6 +261,7 @@
   cursor: pointer;
 }
 
+/* Scheduled badge — per-timing colours */
 .scheduled-badge {
   font-size: 0.72rem;
   padding: 2px var(--s, 8px);
@@ -228,35 +270,11 @@
   white-space: nowrap;
 }
 
-/* Today — soft orange */
-.scheduled-badge.badge--today {
-  background: #ffe0b2;
-  color: #7f3300;
-}
-
-/* Tomorrow — soft yellow */
-.scheduled-badge.badge--tomorrow {
-  background: #fff9c4;
-  color: #5f4800;
-}
-
-/* Inside 7 days — soft green */
-.scheduled-badge.badge--this-week {
-  background: #c8e6c9;
-  color: #1b5e20;
-}
-
-/* Outside 7 days — soft blue */
-.scheduled-badge.badge--future {
-  background: #bbdefb;
-  color: #0d3c6e;
-}
-
-/* Overdue — soft red */
-.scheduled-badge.badge--overdue {
-  background: #ffcdd2;
-  color: #7f0000;
-}
+.scheduled-badge.badge--today    { background: #ffe0b2; color: #7f3300; }
+.scheduled-badge.badge--tomorrow { background: #fff9c4; color: #5f4800; }
+.scheduled-badge.badge--this-week{ background: #c8e6c9; color: #1b5e20; }
+.scheduled-badge.badge--future   { background: #bbdefb; color: #0d3c6e; }
+.scheduled-badge.badge--overdue  { background: #ffcdd2; color: #7f0000; }
 
 .time-logged {
   min-width: 36px;
@@ -281,6 +299,8 @@
   cursor: pointer;
   white-space: nowrap;
   line-height: 1.4;
+  transition: background-color var(--transition-standard, 150ms ease),
+              color var(--transition-standard, 150ms ease);
 }
 
 .btn-increment:hover:not(:disabled) {
@@ -347,6 +367,16 @@
   cursor: default;
 }
 
+.btn-now {
+  background: var(--c-accent, #ff9800);
+  border-color: var(--c-accent, #ff9800);
+  color: #fff;
+}
+
+.btn-now:hover {
+  opacity: 0.85;
+}
+
 .btn-clear {
   background: transparent;
   border: 1px solid var(--c-warn, #f44336);
@@ -356,6 +386,8 @@
   font-size: 0.8rem;
   cursor: pointer;
   margin-left: auto;
+  transition: background-color var(--transition-standard, 150ms ease),
+              color var(--transition-standard, 150ms ease);
 }
 
 .btn-clear:hover {
@@ -377,11 +409,11 @@
 
 .modal-card {
   background: var(--bg, #fff);
-  border-radius: 8px;
+  border-radius: var(--card-border-radius, 8px);
   padding: var(--s3, 24px);
   max-width: 380px;
   width: 90%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--whiteframe-shadow-8dp, 0 8px 32px rgba(0, 0, 0, 0.2));
   display: flex;
   flex-direction: column;
   gap: var(--s2, 16px);
@@ -402,11 +434,12 @@
 .btn-modal-cancel {
   background: transparent;
   border: 1px solid var(--divider-color, #ddd);
-  border-radius: 4px;
+  border-radius: var(--card-border-radius, 4px);
   padding: 6px 16px;
   font-size: 0.875rem;
   cursor: pointer;
   color: var(--text-color-muted, #999);
+  transition: background-color var(--transition-standard, 150ms ease);
 }
 
 .btn-modal-cancel:hover {
@@ -416,11 +449,12 @@
 .btn-modal-confirm {
   background: var(--c-primary, #3f51b5);
   border: 1px solid var(--c-primary, #3f51b5);
-  border-radius: 4px;
+  border-radius: var(--card-border-radius, 4px);
   padding: 6px 16px;
   font-size: 0.875rem;
   cursor: pointer;
   color: #fff;
+  transition: opacity var(--transition-standard, 150ms ease);
 }
 
 .btn-modal-confirm:hover {

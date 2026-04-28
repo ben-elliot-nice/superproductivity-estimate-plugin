@@ -72,6 +72,9 @@ export const StartTimePicker: Component<Props> = (props) => {
             </button>
           )}
         </For>
+        <button class="chip btn-now" onClick={() => props.onUpdate(Date.now())}>
+          Now
+        </button>
         <button class="btn-clear" onClick={props.onClear}>
           Clear
         </button>

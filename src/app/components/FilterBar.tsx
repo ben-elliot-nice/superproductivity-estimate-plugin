@@ -1,22 +1,20 @@
 import { Component, For } from 'solid-js';
 
 export type SortKey = 'default' | 'estimate-asc' | 'estimate-desc' | 'scheduled-asc';
+export type ScheduleFilter = 'all' | 'scheduled' | 'unscheduled';
+export type EstimateFilter = 'all' | 'estimated' | 'unestimated';
 
 export interface FilterState {
   text: string;
-  scheduled: boolean;
-  unscheduled: boolean;
-  estimated: boolean;
-  unestimated: boolean;
+  scheduleFilter: ScheduleFilter;
+  estimateFilter: EstimateFilter;
   sort: SortKey;
 }
 
 export const DEFAULT_FILTER: FilterState = {
   text: '',
-  scheduled: false,
-  unscheduled: false,
-  estimated: false,
-  unestimated: false,
+  scheduleFilter: 'all',
+  estimateFilter: 'all',
   sort: 'default',
 };
 
@@ -25,14 +23,29 @@ interface Props {
   onChange: (f: FilterState) => void;
 }
 
-type ChipKey = 'scheduled' | 'unscheduled' | 'estimated' | 'unestimated';
+const SCHEDULE_CYCLE: Record<ScheduleFilter, ScheduleFilter> = {
+  all: 'scheduled',
+  scheduled: 'unscheduled',
+  unscheduled: 'all',
+};
 
-const CHIPS: { label: string; key: ChipKey }[] = [
-  { label: 'Scheduled', key: 'scheduled' },
-  { label: 'Unscheduled', key: 'unscheduled' },
-  { label: 'Estimated', key: 'estimated' },
-  { label: 'Unestimated', key: 'unestimated' },
-];
+const ESTIMATE_CYCLE: Record<EstimateFilter, EstimateFilter> = {
+  all: 'estimated',
+  estimated: 'unestimated',
+  unestimated: 'all',
+};
+
+const SCHEDULE_LABELS: Record<ScheduleFilter, string> = {
+  all: 'All',
+  scheduled: 'Scheduled',
+  unscheduled: 'Unscheduled',
+};
+
+const ESTIMATE_LABELS: Record<EstimateFilter, string> = {
+  all: 'All',
+  estimated: 'Estimated',
+  unestimated: 'Unestimated',
+};
 
 const SORT_OPTIONS: { label: string; value: SortKey }[] = [
   { label: 'Default order', value: 'default' },
@@ -42,16 +55,11 @@ const SORT_OPTIONS: { label: string; value: SortKey }[] = [
 ];
 
 export const FilterBar: Component<Props> = (props) => {
-  const toggle = (key: ChipKey) => {
-    const f = props.filter;
-    let next = { ...f, [key]: !f[key] };
-    // Enforce mutual exclusivity within pairs
-    if (key === 'scheduled' && next.scheduled) next.unscheduled = false;
-    if (key === 'unscheduled' && next.unscheduled) next.scheduled = false;
-    if (key === 'estimated' && next.estimated) next.unestimated = false;
-    if (key === 'unestimated' && next.unestimated) next.estimated = false;
-    props.onChange(next);
-  };
+  const cycleSchedule = () =>
+    props.onChange({ ...props.filter, scheduleFilter: SCHEDULE_CYCLE[props.filter.scheduleFilter] });
+
+  const cycleEstimate = () =>
+    props.onChange({ ...props.filter, estimateFilter: ESTIMATE_CYCLE[props.filter.estimateFilter] });
 
   return (
     <div class="filter-bar">
@@ -63,17 +71,28 @@ export const FilterBar: Component<Props> = (props) => {
         onInput={(e) => props.onChange({ ...props.filter, text: e.currentTarget.value })}
       />
       <div class="filter-controls">
-        <For each={CHIPS}>
-          {(chip) => (
-            <button
-              class="chip"
-              classList={{ active: props.filter[chip.key] }}
-              onClick={() => toggle(chip.key)}
-            >
-              {chip.label}
-            </button>
-          )}
-        </For>
+        <button
+          class="filter-cycle-btn"
+          classList={{
+            'filter-cycle--active': props.filter.scheduleFilter === 'scheduled',
+            'filter-cycle--inverse': props.filter.scheduleFilter === 'unscheduled',
+          }}
+          title="Cycle: All → Scheduled → Unscheduled"
+          onClick={cycleSchedule}
+        >
+          📅 {SCHEDULE_LABELS[props.filter.scheduleFilter]}
+        </button>
+        <button
+          class="filter-cycle-btn"
+          classList={{
+            'filter-cycle--active': props.filter.estimateFilter === 'estimated',
+            'filter-cycle--inverse': props.filter.estimateFilter === 'unestimated',
+          }}
+          title="Cycle: All → Estimated → Unestimated"
+          onClick={cycleEstimate}
+        >
+          🕐 {ESTIMATE_LABELS[props.filter.estimateFilter]}
+        </button>
         <select
           class="sort-select"
           value={props.filter.sort}
