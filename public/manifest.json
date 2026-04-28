@@ -1,1 +1,22 @@
-{"id":"estimate-scheduler","name":"Estimate & Scheduler","version":"1.0.0","manifestVersion":1,"minSupVersion":"14.0.0","description":"Rapidly edit task estimates and schedule start times across all projects","iFrame":true,"sidePanel":true,"permissions":["getTasks","getAllProjects","updateTask"],"hooks":["anyTaskUpdate"]}
+{
+  "id": "estimate-scheduler",
+  "name": "Estimate & Scheduler",
+  "version": "1.1.0",
+  "manifestVersion": 1,
+  "minSupVersion": "14.0.0",
+  "description": "Rapidly edit task estimates and schedule start times across all projects",
+  "iFrame": true,
+  "sidePanel": true,
+  "permissions": [
+    "getTasks",
+    "getAllProjects",
+    "updateTask"
+  ],
+  "hooks": [
+    "anyTaskUpdate"
+  ],
+  "changelog": {
+    "1.1.0": "Minor release — filter bar redesign (cycling emoji buttons), scheduled badge left-border colour matches timing, Now button in scheduler, CSS var cleanup, tsconfig/vite-env fixes, persist project collapse state, fix schedule time minutes display",
+    "1.0.0": "Initial release — task estimate editing and schedule start time picker across all projects"
+  }
+}
