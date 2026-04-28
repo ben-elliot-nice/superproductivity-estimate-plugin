@@ -8,11 +8,11 @@ import { formatScheduledDate, getScheduleTiming } from '../utils/schedulingUtils
 const STALE_THRESHOLD_MS = 14 * 24 * 60 * 60 * 1000;
 
 const TIMING_COLORS: Record<string, string> = {
-  today:     '#ff9800',
-  tomorrow:  '#fbc02d',
-  'this-week': '#43a047',
-  future:    '#1e88e5',
-  overdue:   '#e53935',
+  today:       '#ffe0b2',
+  tomorrow:    '#fff9c4',
+  'this-week': '#c8e6c9',
+  future:      '#bbdefb',
+  overdue:     '#ffcdd2',
 };
 
 interface Props {
