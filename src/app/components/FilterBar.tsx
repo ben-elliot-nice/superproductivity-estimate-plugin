@@ -109,8 +109,8 @@ export const FilterBar: Component<Props> = (props) => {
       </div>
       <div class="sort-section">
         <span class="filter-section-label">Sort</span>
-        <div class="sort-rows">
-          <div class="sort-row">
+        <div class="sort-cols">
+          <div class="sort-col">
             <span class="sort-sub-label">Tasks</span>
             <select
               class="sort-select"
@@ -124,7 +124,7 @@ export const FilterBar: Component<Props> = (props) => {
               </For>
             </select>
           </div>
-          <div class="sort-row">
+          <div class="sort-col">
             <span class="sort-sub-label">Projects</span>
             <select
               class="sort-select"

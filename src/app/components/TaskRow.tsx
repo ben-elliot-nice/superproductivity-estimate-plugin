@@ -69,14 +69,14 @@ export const TaskRow: Component<Props> = (props) => {
             <Show when={isStale()}>
               <span class="stale-dot" title="Estimate may be outdated (task created >2 weeks ago)" />
             </Show>
-            <Show when={props.showDone && !!props.task.isDone}>
-              <span class="done-tick">✅</span>
-            </Show>
           </div>
           <Show when={props.isSubtask && props.parentTitle}>
             <div class="task-parent-label">↳ {props.parentTitle}</div>
           </Show>
         </div>
+        <Show when={props.showDone}>
+          <span class="done-tick">{props.task.isDone ? '✅' : ''}</span>
+        </Show>
         <div class="task-meta" onClick={props.onToggleExpand}>
           <Show when={props.task.dueWithTime}>
             <span

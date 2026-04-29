@@ -152,29 +152,29 @@ select.sort-select {
 }
 
 select.sort-select {
-  width: auto;
+  width: 185px;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.sort-rows {
+.sort-cols {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-col {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.sort-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .sort-sub-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--text-color-muted, #999);
-  white-space: nowrap;
-  min-width: 44px;
-  text-align: right;
+  opacity: 0.7;
+  padding-left: 2px;
 }
 
 /* ─── Loading / empty states ─────────────────────────────────────────────── */
@@ -293,12 +293,13 @@ select.sort-select {
 }
 
 .done-tick {
-  display: inline-block;
-  font-size: 0.8em;
-  margin-left: 5px;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex-shrink: 0;
+  font-size: 0.85em;
   line-height: 1;
-  text-decoration: none; /* don't strike through the emoji */
 }
 
 /* Staleness indicator */
