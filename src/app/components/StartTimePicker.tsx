@@ -118,7 +118,7 @@ export const StartTimePicker: Component<Props> = (props) => {
 
   const calendarLabel = () => {
     const d = selectedDate();
-    if (!d) return '📅 Date';
+    if (!d) return 'Date';
     return `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   };
 
@@ -135,8 +135,8 @@ export const StartTimePicker: Component<Props> = (props) => {
         </label>
       </Show>
 
-      {/* ── Date row: calendar picker | connected day chips ─────────────── */}
-      <div class="picker-row">
+      {/* ── Date row: calendar picker (left) | connected day chips (right) ── */}
+      <div class="picker-row picker-row--right">
         <div class="calendar-wrap">
           <button
             class="chip chip--calendar"
@@ -179,10 +179,14 @@ export const StartTimePicker: Component<Props> = (props) => {
         </div>
         <div class="chip-group">
           <For each={chips}>
-            {(chip) => (
+            {(chip, index) => (
               <button
                 class="chip"
-                classList={{ active: !!selectedDate() && sameDay(selectedDate()!, chip.date) }}
+                classList={{
+                  'chip-first': index() === 0,
+                  'chip-last': index() === chips.length - 1,
+                  active: !!selectedDate() && sameDay(selectedDate()!, chip.date),
+                }}
                 onClick={() => { setSelectedDate(chip.date); setShowCalendar(false); }}
               >
                 {chip.label}
@@ -206,12 +210,13 @@ export const StartTimePicker: Component<Props> = (props) => {
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleTimeInputCommit(); } }}
           />
           <div class="chip-group">
-            <button class="chip btn-now" onClick={() => emit(Date.now())}>Now</button>
+            <button class="chip chip-first btn-now" onClick={() => emit(Date.now())}>Now</button>
             <For each={TIME_PRESETS}>
-              {(preset) => (
+              {(preset, index) => (
                 <button
                   class="chip"
                   classList={{
+                    'chip-last': index() === TIME_PRESETS.length - 1,
                     active:
                       !!props.dueWithTime &&
                       new Date(props.dueWithTime).getHours() === preset.hour &&

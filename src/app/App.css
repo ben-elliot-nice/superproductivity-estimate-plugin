@@ -396,11 +396,11 @@ select.sort-select {
   border-right-width: 0;
 }
 
-.chip-group .chip:first-child {
+.chip-group .chip.chip-first {
   border-radius: 14px 0 0 14px;
 }
 
-.chip-group .chip:last-child {
+.chip-group .chip.chip-last {
   border-radius: 0 14px 14px 0;
   border-right-width: 1px;
 }

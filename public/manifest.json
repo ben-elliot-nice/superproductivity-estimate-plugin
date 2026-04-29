@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
@@ -16,6 +16,7 @@
     "anyTaskUpdate"
   ],
   "changelog": {
+    "1.2.3": "Fix cascade clear for subtasks (clears subsequent siblings); restore parent-task subtask clear with confirmation; right-justify date row; remove emoji height mismatch on calendar button; fix chip-group connected edges using explicit classes",
     "1.2.2": "Date pill overhaul: connected chip groups, calendar left of chips, remaining business days only (no weekends), Next Week button; time pills shortened (Morn/Arvo); Clear Schedule pill styling; cascade toggle controls clear scope",
     "1.2.1": "Fix start-time-picker padding",
     "1.2.0": "Subtask cascade scheduling (move subsequent or gap-close mode); scheduler UI with calendar overlay and freetext time parser (5pm, 3.30am); show time logged toggle; single-row filter/sort bar; estimate buttons 1h/15m/5m; smart estimate display (fixed width, drops minutes above 99h); scheduled row left border matches badge colour; scroll preserved across all interactions",
