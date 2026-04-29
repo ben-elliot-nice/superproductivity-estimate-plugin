@@ -2,6 +2,7 @@ import { createMemo, createSignal, For, onMount, Show } from 'solid-js';
 import type { PluginAPI as PluginAPIType, Project } from '@super-productivity/plugin-api';
 import type { Task } from './types';
 import { ProjectGroup } from './components/ProjectGroup';
+import type { CascadeMode } from './components/StartTimePicker';
 import { FilterBar, FilterState, DEFAULT_FILTER } from './components/FilterBar';
 import { Modal } from './components/Modal';
 import { formatTime } from './utils/formatTime';
@@ -286,31 +287,27 @@ function App() {
     }
   };
 
-  const handleScheduleClear = async (taskId: string) => {
+  const handleScheduleClear = async (taskId: string, cascadeMode?: CascadeMode) => {
     const savedScroll = window.scrollY;
     try {
-      const task = tasks().find((t) => t.id === taskId);
-      const scheduledSubs = (task?.subTaskIds ?? [])
-        .map((id) => taskMap().get(id))
-        .filter((t): t is Task => !!t && !!t.dueWithTime && !t.isDone);
+      if (cascadeMode === 'cascade') {
+        const task = tasks().find((t) => t.id === taskId);
+        const scheduledSubs = (task?.subTaskIds ?? [])
+          .map((id) => taskMap().get(id))
+          .filter((t): t is Task => !!t && !!t.dueWithTime && !t.isDone);
 
-      if (scheduledSubs.length > 0) {
-        const n = scheduledSubs.length;
-        const confirmed = await confirmAction(
-          `Clear schedule for this task and ${n} subtask${n !== 1 ? 's' : ''}?`,
-        );
-        if (!confirmed) return;
-
-        await Promise.all(
-          scheduledSubs.map((s) =>
-            PluginAPI.updateTask(s.id, { dueWithTime: null } as any),
-          ),
-        );
-        setTasks((all) =>
-          all.map((t) =>
-            scheduledSubs.some((s) => s.id === t.id) ? { ...t, dueWithTime: null } : t,
-          ),
-        );
+        if (scheduledSubs.length > 0) {
+          await Promise.all(
+            scheduledSubs.map((s) =>
+              PluginAPI.updateTask(s.id, { dueWithTime: null } as any),
+            ),
+          );
+          setTasks((all) =>
+            all.map((t) =>
+              scheduledSubs.some((s) => s.id === t.id) ? { ...t, dueWithTime: null } : t,
+            ),
+          );
+        }
       }
 
       await PluginAPI.updateTask(taskId, { dueWithTime: null } as any);

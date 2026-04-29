@@ -385,6 +385,26 @@ select.sort-select {
   white-space: nowrap;
 }
 
+/* Connected pill group — chips share borders with no gap */
+.chip-group {
+  display: flex;
+  align-items: center;
+}
+
+.chip-group .chip {
+  border-radius: 0;
+  border-right-width: 0;
+}
+
+.chip-group .chip:first-child {
+  border-radius: 14px 0 0 14px;
+}
+
+.chip-group .chip:last-child {
+  border-radius: 0 14px 14px 0;
+  border-right-width: 1px;
+}
+
 .chip.active {
   background: var(--c-primary, #3f51b5);
   color: #fff;
@@ -414,11 +434,12 @@ select.sort-select {
   background: transparent;
   border: 1px solid var(--c-warn, #f44336);
   color: var(--c-warn, #f44336);
-  border-radius: 3px;
+  border-radius: 14px;
   padding: 4px 12px;
   font-size: 0.8rem;
   cursor: pointer;
   flex-shrink: 0;
+  white-space: nowrap;
   transition: background-color var(--transition-standard, 150ms ease),
               color var(--transition-standard, 150ms ease);
 }

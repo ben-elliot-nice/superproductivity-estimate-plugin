@@ -65,6 +65,16 @@ Remove the patch entries (1.1.x) that are being rolled up. The new entry should 
 - Push to `main` (via merged PR) → CI builds, publishes a **stable release** tagged `v{version}`
 - The version gate runs on every PR targeting main and fails if minor/major hasn't been bumped
 
+### Downloading a release artifact
+
+`scripts/download-release.sh` polls the GitHub Releases API until the asset is available, then downloads the zip to `~/scratch`.
+
+```sh
+./scripts/download-release.sh              # auto-detects tag from branch + manifest version
+./scripts/download-release.sh v1.2.0       # specific tag
+./scripts/download-release.sh --interval 5 --timeout 120
+```
+
 ## What Counts as Minor vs Major
 
 - **Minor** — new user-visible features, UI changes, new API usage, performance improvements

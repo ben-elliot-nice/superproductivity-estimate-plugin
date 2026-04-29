@@ -6,14 +6,14 @@ export type CascadeMode = 'cascade' | 'gap-close';
 interface Props {
   dueWithTime: number | null;
   onUpdate: (timestamp: number, cascadeMode?: CascadeMode) => void;
-  onClear: () => void;
+  onClear: (cascadeMode?: CascadeMode) => void;
   showCascadeToggle?: boolean;
 }
 
 const TIME_PRESETS = [
-  { label: 'Morning', hour: 9 },
+  { label: 'Morn', hour: 9 },
   { label: 'Noon', hour: 12 },
-  { label: 'Afternoon', hour: 15 },
+  { label: 'Arvo', hour: 15 },
   { label: 'Evening', hour: 20 },
 ] as const;
 
@@ -70,8 +70,12 @@ export const StartTimePicker: Component<Props> = (props) => {
     }
   });
 
-  const emit = (ts: number) =>
-    props.onUpdate(ts, props.showCascadeToggle ? (cascade() ? 'cascade' : 'gap-close') : undefined);
+  const cascadeMode = () =>
+    props.showCascadeToggle ? (cascade() ? 'cascade' as CascadeMode : 'gap-close' as CascadeMode) : undefined;
+
+  const emit = (ts: number) => props.onUpdate(ts, cascadeMode());
+
+  const handleClear = () => props.onClear(cascadeMode());
 
   const commitTime = (d: Date | null, h: number, m = 0) => {
     if (!d) return;
@@ -127,23 +131,12 @@ export const StartTimePicker: Component<Props> = (props) => {
             checked={cascade()}
             onChange={(e) => setCascade(e.currentTarget.checked)}
           />
-          Move subsequent tasks
+          Apply changes to subsequent tasks
         </label>
       </Show>
 
-      {/* ── Date row (right-justified) ───────────────────────────────── */}
-      <div class="picker-row picker-row--right">
-        <For each={chips}>
-          {(chip) => (
-            <button
-              class="chip"
-              classList={{ active: !!selectedDate() && sameDay(selectedDate()!, chip.date) }}
-              onClick={() => { setSelectedDate(chip.date); setShowCalendar(false); }}
-            >
-              {chip.label}
-            </button>
-          )}
-        </For>
+      {/* ── Date row: calendar picker | connected day chips ─────────────── */}
+      <div class="picker-row">
         <div class="calendar-wrap">
           <button
             class="chip chip--calendar"
@@ -184,32 +177,25 @@ export const StartTimePicker: Component<Props> = (props) => {
             </div>
           </Show>
         </div>
-      </div>
-
-      {/* ── Time row (Clear left, rest right) ───────────────────────────── */}
-      <div class="picker-row picker-row--time">
-        <button class="btn-clear" onClick={props.onClear}>Clear</button>
-        <div class="picker-time-right">
-          <button class="chip btn-now" onClick={() => emit(Date.now())}>Now</button>
-          <For each={TIME_PRESETS}>
-            {(preset) => (
+        <div class="chip-group">
+          <For each={chips}>
+            {(chip) => (
               <button
                 class="chip"
-                classList={{
-                  active:
-                    !!props.dueWithTime &&
-                    new Date(props.dueWithTime).getHours() === preset.hour &&
-                    new Date(props.dueWithTime).getMinutes() === 0 &&
-                    !!selectedDate() &&
-                    sameDay(selectedDate()!, new Date(props.dueWithTime)),
-                }}
-                disabled={!selectedDate()}
-                onClick={() => commitTime(selectedDate(), preset.hour)}
+                classList={{ active: !!selectedDate() && sameDay(selectedDate()!, chip.date) }}
+                onClick={() => { setSelectedDate(chip.date); setShowCalendar(false); }}
               >
-                {preset.label}
+                {chip.label}
               </button>
             )}
           </For>
+        </div>
+      </div>
+
+      {/* ── Time row: Clear left | time input + connected time chips ──────── */}
+      <div class="picker-row picker-row--time">
+        <button class="chip btn-clear" onClick={handleClear}>Clear Schedule</button>
+        <div class="picker-time-right">
           <input
             class="time-input"
             type="text"
@@ -219,6 +205,28 @@ export const StartTimePicker: Component<Props> = (props) => {
             onBlur={handleTimeInputCommit}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleTimeInputCommit(); } }}
           />
+          <div class="chip-group">
+            <button class="chip btn-now" onClick={() => emit(Date.now())}>Now</button>
+            <For each={TIME_PRESETS}>
+              {(preset) => (
+                <button
+                  class="chip"
+                  classList={{
+                    active:
+                      !!props.dueWithTime &&
+                      new Date(props.dueWithTime).getHours() === preset.hour &&
+                      new Date(props.dueWithTime).getMinutes() === 0 &&
+                      !!selectedDate() &&
+                      sameDay(selectedDate()!, new Date(props.dueWithTime)),
+                  }}
+                  disabled={!selectedDate()}
+                  onClick={() => commitTime(selectedDate(), preset.hour)}
+                >
+                  {preset.label}
+                </button>
+              )}
+            </For>
+          </div>
         </div>
       </div>
     </div>
