@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, onMount, Show } from 'solid-js';
+import { createEffect, createMemo, createSignal, For, onMount, Show } from 'solid-js';
 import type { PluginAPI as PluginAPIType, Project } from '@super-productivity/plugin-api';
 import type { Task } from './types';
 import { ProjectGroup } from './components/ProjectGroup';
@@ -190,7 +190,52 @@ function App() {
     setProjects(fetchedProjects as Project[]);
   };
 
+  // ── UI state persistence ─────────────────────────────────────────────────
+  interface PersistedUIState {
+    filter?: FilterState;
+    showDone?: boolean;
+    showTimeLogged?: boolean;
+    collapsedProjects?: (string | null)[];
+  }
+
+  const restoreUIState = async () => {
+    try {
+      const raw = await (PluginAPI as any).loadSyncedData();
+      if (!raw) return;
+      const s: PersistedUIState = JSON.parse(raw);
+      if (s.filter) setFilter({ ...DEFAULT_FILTER, ...s.filter });
+      if (typeof s.showDone === 'boolean') setShowDone(s.showDone);
+      if (typeof s.showTimeLogged === 'boolean') setShowTimeLogged(s.showTimeLogged);
+      if (Array.isArray(s.collapsedProjects)) setCollapsedProjects(new Set(s.collapsedProjects));
+    } catch {}
+  };
+
+  let saveTimer: ReturnType<typeof setTimeout> | null = null;
+  const saveUIState = () => {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      const state: PersistedUIState = {
+        filter: filter(),
+        showDone: showDone(),
+        showTimeLogged: showTimeLogged(),
+        collapsedProjects: Array.from(collapsedProjects()),
+      };
+      (PluginAPI as any).persistDataSynced(JSON.stringify(state)).catch(() => {});
+      saveTimer = null;
+    }, 500);
+  };
+
+  // Track all UI signals — save whenever any changes (skip until state is restored)
+  let uiStateRestored = false;
+  createEffect(() => {
+    filter(); showDone(); showTimeLogged(); collapsedProjects();
+    if (uiStateRestored) saveUIState();
+  });
+
   onMount(async () => {
+    await restoreUIState();
+    uiStateRestored = true;
+
     try {
       await fetchData();
     } finally {
@@ -199,6 +244,7 @@ function App() {
 
     window.addEventListener('message', (e: MessageEvent) => {
       if (e.data?.type === 'tasksUpdated') fetchData();
+      if (e.data?.type === 'persistedDataUpdated') restoreUIState();
     });
   });
 

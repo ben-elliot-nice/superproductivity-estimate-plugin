@@ -47,3 +47,16 @@ const TASK_HOOKS = [
 TASK_HOOKS.forEach((hook) => {
   PluginAPI.registerHook(hook as Parameters<typeof PluginAPI.registerHook>[0], notify);
 });
+
+// Forward persisted-data sync events to the iframe so UI state can be reloaded
+const notifyPersistedDataUpdated = () => {
+  const iframes = document.querySelectorAll('iframe');
+  iframes.forEach((iframe) => {
+    iframe.contentWindow?.postMessage({ type: 'persistedDataUpdated' }, '*');
+  });
+};
+
+PluginAPI.registerHook(
+  'persistedDataUpdate' as Parameters<typeof PluginAPI.registerHook>[0],
+  notifyPersistedDataUpdated,
+);
