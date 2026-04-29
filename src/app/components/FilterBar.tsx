@@ -1,6 +1,6 @@
 import { Component, For } from 'solid-js';
 
-export type SortKey = 'default' | 'estimate-asc' | 'estimate-desc' | 'scheduled-asc';
+export type SortKey = 'default' | 'estimate-asc' | 'estimate-desc' | 'scheduled-asc' | 'scheduled-desc';
 export type ScheduleFilter = 'all' | 'scheduled' | 'unscheduled';
 export type EstimateFilter = 'all' | 'estimated' | 'unestimated';
 
@@ -48,10 +48,11 @@ const ESTIMATE_LABELS: Record<EstimateFilter, string> = {
 };
 
 const SORT_OPTIONS: { label: string; value: SortKey }[] = [
-  { label: 'Default order', value: 'default' },
-  { label: 'Estimate ↑', value: 'estimate-asc' },
-  { label: 'Estimate ↓', value: 'estimate-desc' },
-  { label: 'Scheduled ↑', value: 'scheduled-asc' },
+  { label: 'Default', value: 'default' },
+  { label: 'Estimate — High to Low', value: 'estimate-desc' },
+  { label: 'Estimate — Low to High', value: 'estimate-asc' },
+  { label: 'Scheduled — Soonest First', value: 'scheduled-asc' },
+  { label: 'Scheduled — Latest First', value: 'scheduled-desc' },
 ];
 
 export const FilterBar: Component<Props> = (props) => {
@@ -63,36 +64,42 @@ export const FilterBar: Component<Props> = (props) => {
 
   return (
     <div class="filter-bar">
-      <input
-        class="filter-search"
-        type="text"
-        placeholder="Search tasks or projects…"
-        value={props.filter.text}
-        onInput={(e) => props.onChange({ ...props.filter, text: e.currentTarget.value })}
-      />
-      <div class="filter-controls">
-        <button
-          class="filter-cycle-btn"
-          classList={{
-            'filter-cycle--active': props.filter.scheduleFilter === 'scheduled',
-            'filter-cycle--inverse': props.filter.scheduleFilter === 'unscheduled',
-          }}
-          title="Cycle: All → Scheduled → Unscheduled"
-          onClick={cycleSchedule}
-        >
-          📅 {SCHEDULE_LABELS[props.filter.scheduleFilter]}
-        </button>
-        <button
-          class="filter-cycle-btn"
-          classList={{
-            'filter-cycle--active': props.filter.estimateFilter === 'estimated',
-            'filter-cycle--inverse': props.filter.estimateFilter === 'unestimated',
-          }}
-          title="Cycle: All → Estimated → Unestimated"
-          onClick={cycleEstimate}
-        >
-          🕐 {ESTIMATE_LABELS[props.filter.estimateFilter]}
-        </button>
+      <div class="filter-section">
+        <span class="filter-section-label">Filter</span>
+        <div class="filter-section-inner">
+          <input
+            class="filter-search"
+            type="text"
+            placeholder="Filter by project, task, or subtask title"
+            value={props.filter.text}
+            onInput={(e) => props.onChange({ ...props.filter, text: e.currentTarget.value })}
+          />
+          <button
+            class="filter-cycle-btn"
+            classList={{
+              'filter-cycle--active': props.filter.scheduleFilter === 'scheduled',
+              'filter-cycle--inverse': props.filter.scheduleFilter === 'unscheduled',
+            }}
+            title="Cycle: All → Scheduled → Unscheduled"
+            onClick={cycleSchedule}
+          >
+            <span class="filter-emoji">📅</span>{SCHEDULE_LABELS[props.filter.scheduleFilter]}
+          </button>
+          <button
+            class="filter-cycle-btn"
+            classList={{
+              'filter-cycle--active': props.filter.estimateFilter === 'estimated',
+              'filter-cycle--inverse': props.filter.estimateFilter === 'unestimated',
+            }}
+            title="Cycle: All → Estimated → Unestimated"
+            onClick={cycleEstimate}
+          >
+            <span class="filter-emoji">🕐</span>{ESTIMATE_LABELS[props.filter.estimateFilter]}
+          </button>
+        </div>
+      </div>
+      <div class="sort-section">
+        <span class="filter-section-label">Sort</span>
         <select
           class="sort-select"
           value={props.filter.sort}

@@ -23,7 +23,7 @@ interface Props {
   onToggleExpand: (taskId: string) => void;
   onEstimateUpdate: (taskId: string, newEstimate: number) => void;
   onScheduleUpdate: (taskId: string, timestamp: number, cascadeMode?: CascadeMode) => Promise<void>;
-  onScheduleClear: (taskId: string) => Promise<void>;
+  onScheduleClear: (taskId: string, cascadeMode?: CascadeMode) => Promise<void>;
 }
 
 export const ProjectGroup: Component<Props> = (props) => {
@@ -79,7 +79,7 @@ export const ProjectGroup: Component<Props> = (props) => {
                 props.onEstimateUpdate(row.task.id, newEstimate)
               }
               onScheduleUpdate={(ts, mode) => props.onScheduleUpdate(row.task.id, ts, mode)}
-              onScheduleClear={() => props.onScheduleClear(row.task.id)}
+              onScheduleClear={(mode) => props.onScheduleClear(row.task.id, mode)}
             />
           )}
         </For>

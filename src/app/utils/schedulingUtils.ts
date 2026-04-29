@@ -9,11 +9,30 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
 export function getDayChips(): DayChip[] {
   const now = new Date();
-  return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
-    const label = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DAY_NAMES[d.getDay()];
-    return { label, date: d };
-  });
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const todayDow = today.getDay();
+
+  const chips: DayChip[] = [{ label: 'Today', date: today }];
+
+  // Days until next Monday (start of next work week)
+  const daysToNextMon =
+    todayDow === 0 ? 1 :
+    todayDow === 6 ? 2 :
+    8 - todayDow;
+
+  const nextMonday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + daysToNextMon);
+
+  // Remaining business days this week (tomorrow through Friday, skip weekends)
+  for (let i = 1; i < daysToNextMon; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const dow = d.getDay();
+    if (dow === 0 || dow === 6) continue;
+    chips.push({ label: i === 1 ? 'Tomorrow' : DAY_NAMES[dow], date: d });
+  }
+
+  chips.push({ label: 'Next Week', date: nextMonday });
+
+  return chips;
 }
 
 export function getTimestamp(date: Date, hour: number): number {

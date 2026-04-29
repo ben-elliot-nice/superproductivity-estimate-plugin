@@ -25,7 +25,7 @@ interface Props {
   onToggleExpand: () => void;
   onEstimateUpdate: (newEstimate: number) => void;
   onScheduleUpdate: (timestamp: number, cascadeMode?: CascadeMode) => Promise<void>;
-  onScheduleClear: () => Promise<void>;
+  onScheduleClear: (cascadeMode?: CascadeMode) => Promise<void>;
 }
 
 export const TaskRow: Component<Props> = (props) => {

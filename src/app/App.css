@@ -55,10 +55,39 @@
 .filter-bar {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: var(--s, 8px);
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sort-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.filter-section-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-color-muted, #999);
+  opacity: 0.7;
+  padding-left: 2px;
+}
+
+.filter-section-inner {
+  display: flex;
   align-items: center;
   gap: 6px;
-  padding-top: var(--s, 8px);
 }
 
 .filter-search {
@@ -78,11 +107,13 @@
   border-color: var(--c-primary, #3f51b5);
 }
 
-.filter-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
+/* Emoji inside cycle buttons — constrained so it doesn't inflate button height */
+.filter-emoji {
+  display: inline-block;
+  font-size: 0.8em;
+  line-height: 1;
+  vertical-align: middle;
+  margin-right: 3px;
 }
 
 /* Cycling filter buttons */
@@ -120,7 +151,6 @@
 
 select.sort-select {
   width: auto;
-  margin-left: auto;
   padding: 3px 6px;
   border: 1px solid var(--divider-color, #ddd);
   border-bottom: 1px solid var(--divider-color, #ddd);
@@ -347,7 +377,7 @@ select.sort-select {
 }
 
 .start-time-picker {
-  padding: var(--s, 8px) 0 var(--s2, 16px) 0;
+  padding: var(--s1, 8px) var(--s2, 16px) 0 var(--s2, 16px);
   border-top: 1px dashed var(--divider-color, #eee);
 }
 
@@ -385,6 +415,32 @@ select.sort-select {
   white-space: nowrap;
 }
 
+/* Connected pill group — chips share borders with no gap */
+.chip-group {
+  display: flex;
+  align-items: center;
+}
+
+.chip-group .chip {
+  border-radius: 0;
+  position: relative;
+  margin-right: -1px; /* collapse adjacent border into one */
+}
+
+.chip-group .chip:hover:not(:disabled),
+.chip-group .chip.active {
+  z-index: 1; /* bring to front so full border shows on active/hover */
+}
+
+.chip-group .chip.chip-first {
+  border-radius: 14px 0 0 14px;
+}
+
+.chip-group .chip.chip-last {
+  border-radius: 0 14px 14px 0;
+  margin-right: 0;
+}
+
 .chip.active {
   background: var(--c-primary, #3f51b5);
   color: #fff;
@@ -414,11 +470,12 @@ select.sort-select {
   background: transparent;
   border: 1px solid var(--c-warn, #f44336);
   color: var(--c-warn, #f44336);
-  border-radius: 3px;
+  border-radius: 14px;
   padding: 4px 12px;
   font-size: 0.8rem;
   cursor: pointer;
   flex-shrink: 0;
+  white-space: nowrap;
   transition: background-color var(--transition-standard, 150ms ease),
               color var(--transition-standard, 150ms ease);
 }
