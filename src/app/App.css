@@ -347,7 +347,7 @@ select.sort-select {
 }
 
 .start-time-picker {
-  padding: var(--s, 8px) 0 var(--s2, 16px) 0;
+  padding: var(--s1, 8px) var(--s2, 16px) 0 var(--s2, 16px);
   border-top: 1px dashed var(--divider-color, #eee);
 }
 
