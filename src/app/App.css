@@ -55,10 +55,39 @@
 .filter-bar {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: var(--s, 8px);
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sort-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.filter-section-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-color-muted, #999);
+  opacity: 0.7;
+  padding-left: 2px;
+}
+
+.filter-section-inner {
+  display: flex;
   align-items: center;
   gap: 6px;
-  padding-top: var(--s, 8px);
 }
 
 .filter-search {
@@ -78,11 +107,13 @@
   border-color: var(--c-primary, #3f51b5);
 }
 
-.filter-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
+/* Dim category prefix inside cycle buttons */
+.filter-cat {
+  font-size: 0.7em;
+  opacity: 0.55;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 3px;
 }
 
 /* Cycling filter buttons */
@@ -120,7 +151,6 @@
 
 select.sort-select {
   width: auto;
-  margin-left: auto;
   padding: 3px 6px;
   border: 1px solid var(--divider-color, #ddd);
   border-bottom: 1px solid var(--divider-color, #ddd);

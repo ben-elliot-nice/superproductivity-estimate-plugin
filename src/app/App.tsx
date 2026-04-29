@@ -126,6 +126,8 @@ function App() {
           groupTasks.sort((a, b) => (b.timeEstimate ?? 0) - (a.timeEstimate ?? 0));
         else if (f.sort === 'scheduled-asc')
           groupTasks.sort((a, b) => (a.dueWithTime ?? Infinity) - (b.dueWithTime ?? Infinity));
+        else if (f.sort === 'scheduled-desc')
+          groupTasks.sort((a, b) => (b.dueWithTime ?? -Infinity) - (a.dueWithTime ?? -Infinity));
       }
 
       return [{ ...group, tasks: groupTasks }];
