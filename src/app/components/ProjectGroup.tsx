@@ -73,6 +73,7 @@ export const ProjectGroup: Component<Props> = (props) => {
               parentTitle={row.parentTitle}
               isExpanded={props.expandedTaskId === row.task.id}
               showTimeLogged={props.showTimeLogged}
+              showDone={props.showDone}
               showCascadeToggle={row.showCascadeToggle}
               onToggleExpand={() => props.onToggleExpand(row.task.id)}
               onEstimateUpdate={(newEstimate) =>

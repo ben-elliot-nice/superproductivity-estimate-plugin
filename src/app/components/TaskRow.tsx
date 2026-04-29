@@ -21,6 +21,7 @@ interface Props {
   parentTitle?: string;
   isExpanded: boolean;
   showTimeLogged: boolean;
+  showDone: boolean;
   showCascadeToggle?: boolean;
   onToggleExpand: () => void;
   onEstimateUpdate: (newEstimate: number) => void;
@@ -60,10 +61,16 @@ export const TaskRow: Component<Props> = (props) => {
             }
           }}
         >
-          <div class="task-title-text">
+          <div
+            class="task-title-text"
+            classList={{ 'task-title--done': props.showDone && !!props.task.isDone }}
+          >
             {props.task.title}
             <Show when={isStale()}>
               <span class="stale-dot" title="Estimate may be outdated (task created >2 weeks ago)" />
+            </Show>
+            <Show when={props.showDone && !!props.task.isDone}>
+              <span class="done-tick">✅</span>
             </Show>
           </div>
           <Show when={props.isSubtask && props.parentTitle}>

@@ -3,6 +3,7 @@ import type { PluginAPI as PluginAPIType, Project } from '@super-productivity/pl
 import type { Task } from './types';
 import { ProjectGroup } from './components/ProjectGroup';
 import type { CascadeMode } from './components/StartTimePicker';
+import type { ProjectSortKey } from './components/FilterBar';
 import { FilterBar, FilterState, DEFAULT_FILTER } from './components/FilterBar';
 import { Modal } from './components/Modal';
 import { formatTime } from './utils/formatTime';
@@ -56,6 +57,22 @@ function App() {
       });
     });
 
+  const projectLatest = (tasks: Task[], map: Map<string, Task>): number => {
+    let latest = 0;
+    for (const t of tasks) {
+      const ts = t.updated ?? t.created ?? 0;
+      if (ts > latest) latest = ts;
+      for (const subId of t.subTaskIds ?? []) {
+        const sub = map.get(subId);
+        if (sub) {
+          const subTs = sub.updated ?? sub.created ?? 0;
+          if (subTs > latest) latest = subTs;
+        }
+      }
+    }
+    return latest;
+  };
+
   const grouped = createMemo((): GroupedProject[] => {
     const map = taskMap();
     const topLevelAll = tasks().filter((t) => !t.parentId || !map.has(t.parentId));
@@ -74,17 +91,27 @@ function App() {
       result.push({ projectId: null, title: 'Inbox', tasks: byProject.get(null)! });
     }
 
-    projects()
-      .filter((p) => byProject.has(p.id))
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .forEach((p) =>
-        result.push({
-          projectId: p.id,
-          title: p.title,
-          tasks: byProject.get(p.id)!,
-          projectColor: (p as any).theme?.primary as string | undefined,
-        }),
-      );
+    const projectSort: ProjectSortKey = filter().projectSort;
+
+    const sortedProjects = projects().filter((p) => byProject.has(p.id));
+    if (projectSort === 'default') {
+      sortedProjects.sort((a, b) => a.title.localeCompare(b.title));
+    } else {
+      sortedProjects.sort((a, b) => {
+        const aTs = projectLatest(byProject.get(a.id)!, map);
+        const bTs = projectLatest(byProject.get(b.id)!, map);
+        return projectSort === 'recently-updated' ? bTs - aTs : aTs - bTs;
+      });
+    }
+
+    sortedProjects.forEach((p) =>
+      result.push({
+        projectId: p.id,
+        title: p.title,
+        tasks: byProject.get(p.id)!,
+        projectColor: (p as any).theme?.primary as string | undefined,
+      }),
+    );
 
     return result;
   });

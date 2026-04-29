@@ -1,6 +1,7 @@
 import { Component, For } from 'solid-js';
 
 export type SortKey = 'default' | 'estimate-asc' | 'estimate-desc' | 'scheduled-asc' | 'scheduled-desc';
+export type ProjectSortKey = 'default' | 'recently-updated' | 'least-recently-updated';
 export type ScheduleFilter = 'all' | 'scheduled' | 'unscheduled';
 export type EstimateFilter = 'all' | 'estimated' | 'unestimated';
 
@@ -9,6 +10,7 @@ export interface FilterState {
   scheduleFilter: ScheduleFilter;
   estimateFilter: EstimateFilter;
   sort: SortKey;
+  projectSort: ProjectSortKey;
 }
 
 export const DEFAULT_FILTER: FilterState = {
@@ -16,6 +18,7 @@ export const DEFAULT_FILTER: FilterState = {
   scheduleFilter: 'all',
   estimateFilter: 'all',
   sort: 'default',
+  projectSort: 'default',
 };
 
 interface Props {
@@ -47,12 +50,18 @@ const ESTIMATE_LABELS: Record<EstimateFilter, string> = {
   unestimated: 'Unestimated',
 };
 
-const SORT_OPTIONS: { label: string; value: SortKey }[] = [
+const TASK_SORT_OPTIONS: { label: string; value: SortKey }[] = [
   { label: 'Default', value: 'default' },
   { label: 'Estimate — High to Low', value: 'estimate-desc' },
   { label: 'Estimate — Low to High', value: 'estimate-asc' },
   { label: 'Scheduled — Soonest First', value: 'scheduled-asc' },
   { label: 'Scheduled — Latest First', value: 'scheduled-desc' },
+];
+
+const PROJECT_SORT_OPTIONS: { label: string; value: ProjectSortKey }[] = [
+  { label: 'Default (A–Z)', value: 'default' },
+  { label: 'Recently Updated', value: 'recently-updated' },
+  { label: 'Least Recently Updated', value: 'least-recently-updated' },
 ];
 
 export const FilterBar: Component<Props> = (props) => {
@@ -100,17 +109,36 @@ export const FilterBar: Component<Props> = (props) => {
       </div>
       <div class="sort-section">
         <span class="filter-section-label">Sort</span>
-        <select
-          class="sort-select"
-          value={props.filter.sort}
-          onChange={(e) =>
-            props.onChange({ ...props.filter, sort: e.currentTarget.value as SortKey })
-          }
-        >
-          <For each={SORT_OPTIONS}>
-            {(opt) => <option value={opt.value}>{opt.label}</option>}
-          </For>
-        </select>
+        <div class="sort-rows">
+          <div class="sort-row">
+            <span class="sort-sub-label">Tasks</span>
+            <select
+              class="sort-select"
+              value={props.filter.sort}
+              onChange={(e) =>
+                props.onChange({ ...props.filter, sort: e.currentTarget.value as SortKey })
+              }
+            >
+              <For each={TASK_SORT_OPTIONS}>
+                {(opt) => <option value={opt.value}>{opt.label}</option>}
+              </For>
+            </select>
+          </div>
+          <div class="sort-row">
+            <span class="sort-sub-label">Projects</span>
+            <select
+              class="sort-select"
+              value={props.filter.projectSort}
+              onChange={(e) =>
+                props.onChange({ ...props.filter, projectSort: e.currentTarget.value as ProjectSortKey })
+              }
+            >
+              <For each={PROJECT_SORT_OPTIONS}>
+                {(opt) => <option value={opt.value}>{opt.label}</option>}
+              </For>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   );
