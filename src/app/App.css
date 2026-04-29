@@ -55,7 +55,7 @@
 .filter-bar {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 10px;
   padding-top: var(--s, 8px);
 }
@@ -107,12 +107,12 @@
   border-color: var(--c-primary, #3f51b5);
 }
 
-/* Dim category prefix inside cycle buttons */
-.filter-cat {
-  font-size: 0.7em;
-  opacity: 0.55;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+/* Emoji inside cycle buttons — constrained so it doesn't inflate button height */
+.filter-emoji {
+  display: inline-block;
+  font-size: 0.8em;
+  line-height: 1;
+  vertical-align: middle;
   margin-right: 3px;
 }
 
@@ -423,7 +423,13 @@ select.sort-select {
 
 .chip-group .chip {
   border-radius: 0;
-  border-right-width: 0;
+  position: relative;
+  margin-right: -1px; /* collapse adjacent border into one */
+}
+
+.chip-group .chip:hover:not(:disabled),
+.chip-group .chip.active {
+  z-index: 1; /* bring to front so full border shows on active/hover */
 }
 
 .chip-group .chip.chip-first {
@@ -432,7 +438,7 @@ select.sort-select {
 
 .chip-group .chip.chip-last {
   border-radius: 0 14px 14px 0;
-  border-right-width: 1px;
+  margin-right: 0;
 }
 
 .chip.active {

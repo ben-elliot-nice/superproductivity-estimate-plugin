@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
@@ -16,6 +16,7 @@
     "anyTaskUpdate"
   ],
   "changelog": {
+    "1.2.5": "Fix filter bar section top-alignment; restore emojis with constrained height span; fix pill group right-edge highlight using margin-right overlap instead of border removal",
     "1.2.4": "Filter bar two-section layout with Filter/Sort labels; remove emoji height inflation; dim category prefix on cycle buttons; updated search placeholder; sort options renamed descriptively; add Scheduled — Latest First sort",
     "1.2.3": "Fix cascade clear for subtasks (clears subsequent siblings); restore parent-task subtask clear with confirmation; right-justify date row; remove emoji height mismatch on calendar button; fix chip-group connected edges using explicit classes",
     "1.2.2": "Date pill overhaul: connected chip groups, calendar left of chips, remaining business days only (no weekends), Next Week button; time pills shortened (Morn/Arvo); Clear Schedule pill styling; cascade toggle controls clear scope",

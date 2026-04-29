@@ -83,7 +83,7 @@ export const FilterBar: Component<Props> = (props) => {
             title="Cycle: All → Scheduled → Unscheduled"
             onClick={cycleSchedule}
           >
-            <span class="filter-cat">Sched</span>{SCHEDULE_LABELS[props.filter.scheduleFilter]}
+            <span class="filter-emoji">📅</span>{SCHEDULE_LABELS[props.filter.scheduleFilter]}
           </button>
           <button
             class="filter-cycle-btn"
@@ -94,7 +94,7 @@ export const FilterBar: Component<Props> = (props) => {
             title="Cycle: All → Estimated → Unestimated"
             onClick={cycleEstimate}
           >
-            <span class="filter-cat">Est</span>{ESTIMATE_LABELS[props.filter.estimateFilter]}
+            <span class="filter-emoji">🕐</span>{ESTIMATE_LABELS[props.filter.estimateFilter]}
           </button>
         </div>
       </div>
