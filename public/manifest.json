@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
@@ -20,12 +20,7 @@
     "taskComplete"
   ],
   "changelog": {
-    "1.3.6": "Filter bar: FILTER label top-justified, search field bottom-justified to align with sort selects",
-    "1.3.5": "Fix invalid hook name: taskAdd → taskCreated",
-    "1.3.4": "Persist UI state (filters, sorts, collapsed projects, toggles) via SP persistDataSynced; restores on reopen and syncs across devices via persistedDataUpdate hook",
-    "1.3.3": "Subscribe to all task lifecycle hooks (taskAdd, taskUpdate, taskDelete, taskComplete, anyTaskUpdate) with debounce; view now refreshes on any task change",
-    "1.3.2": "Move done tick outside title text (fixed-width column, right-justified); sort dropdowns side-by-side with sub-labels, equal width",
-    "1.3.1": "Consistent filter bar element heights/styling; project sort dropdown (Default/Recently Updated/Least Recently Updated); show done tasks with strikethrough and ✅ emoji",
+    "1.4.0": "Filter bar overhaul (unified height/styling, Filter/Sort labels, project sort); show done tasks with strikethrough and ✅ column; subscribe to all task lifecycle hooks with debounce; persist UI state across sessions; date/time picker connected pills with business-day chips and Next Week button",
     "1.3.0": "Date/time picker overhaul: connected pill groups, remaining business days only with Next Week button, shortened time labels (Morn/Arvo), Clear Schedule button with cascade scope control; filter bar redesigned with Filter/Sort section labels, emoji restored, descriptive sort options, Scheduled — Latest First sort added",
     "1.2.0": "Subtask cascade scheduling (move subsequent or gap-close mode); scheduler UI with calendar overlay and freetext time parser (5pm, 3.30am); show time logged toggle; single-row filter/sort bar; estimate buttons 1h/15m/5m; smart estimate display (fixed width, drops minutes above 99h); scheduled row left border matches badge colour; scroll preserved across all interactions",
     "1.1.0": "Filter bar redesign (cycling emoji buttons), scheduled badge colour-coded by timing, Now button, CSS var cleanup, collapse state persistence, schedule time minute precision",
