@@ -55,7 +55,7 @@
 .filter-bar {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 10px;
   padding-top: var(--s, 8px);
 }
@@ -63,7 +63,7 @@
 .filter-section {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
   flex: 1;
   min-width: 0;
 }
@@ -86,20 +86,27 @@
 
 .filter-section-inner {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 6px;
+}
+
+/* Shared token for all filter bar interactive elements */
+.filter-search,
+.filter-cycle-btn,
+select.sort-select {
+  height: 30px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: 1px solid var(--divider-color, #ddd);
+  border-radius: 14px;
+  font-size: 0.8rem;
+  background: var(--card-bg, #f5f5f5);
+  color: var(--text-color, #333);
 }
 
 .filter-search {
   flex: 1;
   min-width: 120px;
-  box-sizing: border-box;
-  padding: 6px 10px;
-  border: 1px solid var(--divider-color, #ddd);
-  border-radius: var(--card-border-radius, 4px);
-  font-size: 0.875rem;
-  background: var(--card-bg, #f5f5f5);
-  color: var(--text-color, #333);
   outline: none;
 }
 
@@ -121,12 +128,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 10px;
-  border: 1px solid var(--divider-color, #ddd);
-  border-radius: 14px;
-  font-size: 0.8rem;
   cursor: pointer;
-  background: var(--card-bg, #f5f5f5);
   color: var(--text-color-muted, #999);
   white-space: nowrap;
   transition: background-color var(--transition-standard, 150ms ease),
@@ -150,16 +152,29 @@
 }
 
 select.sort-select {
-  width: auto;
-  padding: 3px 6px;
-  border: 1px solid var(--divider-color, #ddd);
-  border-bottom: 1px solid var(--divider-color, #ddd);
-  border-radius: var(--card-border-radius, 4px);
-  font-size: 0.8rem;
-  background: var(--card-bg, #f5f5f5);
-  color: var(--text-color, #333);
+  width: 185px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.sort-cols {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sort-sub-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-color-muted, #999);
+  opacity: 0.7;
+  padding-left: 2px;
 }
 
 /* ─── Loading / empty states ─────────────────────────────────────────────── */
@@ -269,6 +284,22 @@ select.sort-select {
   font-size: 0.72rem;
   color: var(--text-color-muted, #999);
   margin-top: 2px;
+}
+
+/* Done task — strikethrough title */
+.task-title--done {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.done-tick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex-shrink: 0;
+  font-size: 0.85em;
+  line-height: 1;
 }
 
 /* Staleness indicator */
