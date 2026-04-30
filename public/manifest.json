@@ -1,7 +1,7 @@
 {
   "id": "estimate-scheduler",
   "name": "Estimate & Scheduler",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "manifestVersion": 1,
   "minSupVersion": "14.0.0",
   "description": "Rapidly edit task estimates and schedule start times across all projects",
@@ -20,6 +20,7 @@
     "taskComplete"
   ],
   "changelog": {
+    "1.3.6": "Filter bar: FILTER label top-justified, search field bottom-justified to align with sort selects",
     "1.3.5": "Fix invalid hook name: taskAdd → taskCreated",
     "1.3.4": "Persist UI state (filters, sorts, collapsed projects, toggles) via SP persistDataSynced; restores on reopen and syncs across devices via persistedDataUpdate hook",
     "1.3.3": "Subscribe to all task lifecycle hooks (taskAdd, taskUpdate, taskDelete, taskComplete, anyTaskUpdate) with debounce; view now refreshes on any task change",
