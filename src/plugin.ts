@@ -38,7 +38,7 @@ const notify = () => {
 // Register all task lifecycle hooks so any add/update/delete/complete triggers a re-fetch
 const TASK_HOOKS = [
   'anyTaskUpdate',
-  'taskAdd',
+  'taskCreated',
   'taskUpdate',
   'taskDelete',
   'taskComplete',
