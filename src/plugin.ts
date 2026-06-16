@@ -57,6 +57,6 @@ const notifyPersistedDataUpdated = () => {
 };
 
 PluginAPI.registerHook(
-  'persistedDataUpdate' as Parameters<typeof PluginAPI.registerHook>[0],
+  'persistedDataChanged' as Parameters<typeof PluginAPI.registerHook>[0],
   notifyPersistedDataUpdated,
 );
