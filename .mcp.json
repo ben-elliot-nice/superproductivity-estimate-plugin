@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "super-productivity": {
+            "command": "uvx",
+            "args": [
+                "superproductivity-mcp"
+            ]
+        }
+    }
+}
