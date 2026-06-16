@@ -19,10 +19,22 @@ Bump the **patch** version on every meaningful change (feature, fix, refactor). 
 ### Before PR to `main`
 Bump **minor** or **major** before opening (or updating) the PR. The CI version gate will block the merge if only a patch has been incremented relative to main.
 
-- **Minor** (`1.1.x → 1.2.0`) — new features or meaningful improvements
+Dev will already be at a patch version by this point (e.g. `1.4.1`). The minor bump supersedes it — go straight from the current patch to the next minor:
+
+```
+1.4.1 → 1.5.0   (not back to 1.4.0)
+```
+
+- **Minor** (`1.4.1 → 1.5.0`) — new features or meaningful improvements
 - **Major** (`1.x.x → 2.0.0`) — breaking changes or significant rewrites
 
 The version gate reads `public/manifest.json` on both branches and compares minor/major. Patch-only changes fail the gate.
+
+Commit message for the minor bump:
+
+```
+1.5.0 bump minor for main release
+```
 
 ## Changelog (`public/manifest.json`)
 
